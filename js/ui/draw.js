@@ -11,6 +11,18 @@ var UI = (function (interf) {
 		  c.arc(x, y, r, 0, 2 * Math.PI, false);
 		  c.fillStyle = 'green';
 		  c.fill();
+
+		  c.save();
+			  c.translate(x,y); 
+			  c.rotate(boid.state.orientation); 
+			  c.fillStyle = 'yellow';
+			  var angDiff = 2*Math.PI/3;
+			  c.beginPath();
+			  c.moveTo(r, 0);
+			  c.lineTo(r*Math.cos(angDiff),r*Math.sin(angDiff));
+			  c.lineTo(r*Math.cos(2*angDiff),r*Math.sin(2*angDiff));
+			  c.fill();
+		  c.restore();
 		}
 
 		boids.forEach(drawBoid);

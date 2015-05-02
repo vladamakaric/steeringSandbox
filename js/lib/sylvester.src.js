@@ -25,6 +25,7 @@ var Sylvester = {
   precision: 1e-6
 };
 
+
 function Vector() {}
 Vector.prototype = {
 
@@ -1253,3 +1254,17 @@ var $V = Vector.create;
 var $M = Matrix.create;
 var $L = Line.create;
 var $P = Plane.create;
+
+// Vladimir Makaric 2015
+Vector.prototype.length = Vector.prototype.modulus;
+
+Vector.prototype.scale = function(len){
+	return this.toUnitVector().x(len);
+}
+
+Vector.prototype.truncate = function(maxLen){
+	if(this.length() > maxLen)
+		return this.scale(maxLen);
+
+	return this;
+}

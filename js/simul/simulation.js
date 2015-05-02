@@ -7,6 +7,7 @@ var SIMUL = (function (interf) {
 		var BWI = interf.BoidWorldInfoConstructor(that);
 
 		that.update = function(dt){
+
 			boids.forEach(function(boid){
 				boid.update(dt, BWI);
 			});

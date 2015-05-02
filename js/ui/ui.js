@@ -4,7 +4,7 @@ var UI = (function (interf) {
 		var that = {};
 
 		var boid = SIMUL.BoidConstructor({position: $V([100,100]),
-										  velocity: $V([1,1]),
+										  velocity: $V([0,1]),
 										  orientation: 0}, 
 										  null,
 										  null);
