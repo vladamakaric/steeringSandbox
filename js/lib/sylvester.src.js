@@ -1299,7 +1299,10 @@ LineSegment.prototype = {
 
   		var VProj = this.line.pointClosestTo(V).to2D();
 
-		return VProj;
+		if(this.isProjectionOn(VProj))
+			return VProj;
+
+		return null;
 	},
 
 	isProjectionOn: function(VProj){

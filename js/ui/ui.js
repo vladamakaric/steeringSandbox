@@ -18,10 +18,35 @@ var UI = (function (interf) {
 		var c = canvas.getContext('2d');
 
 
-		////////////////////////////////////
+		var canvasPointerEvents = CanvPtrEventMngr(canvas);
 
 
 		var path = [$V([10,10]), $V([100,100]), $V([200,100])];
+
+		var pointOnPath = $V([0,0]);
+		var advP = $V([10,10]);
+
+		canvasPointerEvents.ptrMove = function(pos){
+
+			var V = $V([pos.x, pos.y]);
+			var dist = PATH.getDistance(V, path, 1);
+
+			var cindx = PATH.getClosestVectorIndx(V, path);
+			var locOnPath = PATH.getLocationOnPath(V, path,cindx); 
+
+			var aLocOPath = PATH.advancePathLocation(path, locOnPath, 30);
+			advP = aLocOPath.pos;
+			
+			pointOnPath = locOnPath.pos;
+			console.log(locOnPath.pos.e(1) + " " +  locOnPath.pos.e(2) + "ln:" + 
+					locOnPath.lsNum);
+
+		}
+
+		canvasPointerEvents.attachEvents();
+		////////////////////////////////////
+
+
 
 
 		///////////////////////////////////
@@ -31,6 +56,11 @@ var UI = (function (interf) {
 			c.clearRect(0,0, canvas.width, canvas.height);	
 			interf.DRAW.boids(c, simulation.boids, 10);
 
+			c.fillStyle = 'red';
+			DRAW.point(c, advP);
+
+			c.fillStyle = 'green';
+			DRAW.point(c, pointOnPath);
 			DRAW.openPath(c,path);
 		}
 
