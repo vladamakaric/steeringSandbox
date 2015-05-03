@@ -1,6 +1,25 @@
 var PATH = (function(interf){
 
+	interf.getClosestLSIndx = function(V, path){
 
+		var minDist = Number.MAX_VALUE;
+		var closestIndx = -1;
+
+		for(var i=1; i<path.length; i++){
+
+			var ls = $LS(path[i-1], path[i]);
+
+			var dist = ls.distanceFrom(V);
+
+			if(dist<=minDist){
+				minDist = dist;
+				closestIndx = i-1;
+			}
+
+		}
+
+		return closestIndx;
+	}
 
 	interf.getClosestVectorIndx=function(V, vectors){
 
@@ -18,76 +37,47 @@ var PATH = (function(interf){
 		return minIndx;
 	}
 
-	interf.getLocationOnPath = function(V, path, closestPointIndex){
-		
-		var neighborLss = getNeighborLineSegments(path, closestPointIndex);
-
-		var firstLsNum = ( closestPointIndex > 0 ) ? 
-						 closestPointIndex-1 : closestPointIndex;
-
-		var minDistSq = Number.MAX_VALUE;
-		var bestProj = null;
-		var minLsNum = -1;
-
-		neighborLss.forEach(function(ls, i){
-
-			var VProj = ls.projectOn(V);
-
-			if(VProj!=null){
-			
-				var distToProjSq = VProj.subtract(V).lengthSq();
-
-				if(minDistSq > distToProjSq){
-					minDist = distToProjSq;
-					minLsNum = firstLsNum+i;
-					bestProj = VProj;
-
-				}
-			}
-		});
-
-		if(bestProj){
-			return { pos: bestProj, lsNum: minLsNum };
-		}
-
-		return { pos: path[closestPointIndex], lsNum: firstLsNum + neighborLss.length-1};
-	}
-
 	interf.advancePathLocation = function(path, pathLoc, advanceDist){
-		var prevLsPoint = path[pathLoc.lsNum];
-		var nextLsPoint = path[pathLoc.lsNum + 1];
+		var prevLsPoint = path[pathLoc.lsIndx];
+		var nextLsPoint = path[pathLoc.lsIndx + 1];
 
 		var distOnLs = prevLsPoint.subtract(pathLoc.pos).length();
 
 		var advanceDir =nextLsPoint.subtract(prevLsPoint); 
 		var lsLen = advanceDir.length();
 
-		var lsNum = pathLoc.lsNum;
+		var lsIndx = pathLoc.lsIndx;
 
 		var advancedPos;
 
 
 		if(distOnLs + advanceDist>lsLen){
 
-			if(lsNum==path.length-2){
+			if(lsIndx==path.length-2){
 				advancedPos = path[path.length-1];
 			}else {
-				lsNum+=1;
+				lsIndx+=1;
 
-				var nextLsDir = path[lsNum+1].subtract(nextLsPoint);
+				var nextLsDir = path[lsIndx+1].subtract(nextLsPoint);
 
 				var distOnNewLs = distOnLs + advanceDist - lsLen;
 
-				advancedPos = nextLsPoint.add(nextLsDir.scale(distOnNewLs));
+				var nextLsLen = nextLsDir.length();
+				var delta = nextLsDir.scale(distOnNewLs).truncate(nextLsLen);
+
+				advancedPos = nextLsPoint.add(delta);
 			}
 
 		}else {
 			advancedPos = pathLoc.pos.add(advanceDir.scale(advanceDist));
 		}
 
-		return { pos: advancedPos, lsNum: lsNum};
+		return { pos: advancedPos, lsIndx: lsIndx};
 	}
 
+	function getLineSegmentFromPath(indx, path){
+		return $LS(path[indx], path[indx+1]);
+	}
 
 	function getNeighborLineSegments(path, indx){
 		var indxs = [];
@@ -109,32 +99,14 @@ var PATH = (function(interf){
 	}
 
 
-	interf.getDistance = function(V, path, closestPointIndex){
-		var lss = getNeighborLineSegments(path, closestPointIndex);
-		var minDist = lss.map(function(ls){ return ls.distanceFrom(V); }).min();   
-		return minDist;
+	interf.getDistance =  function(V, path){
+
+		var clsIndx = PATH.getClosestLSIndx(V, path);
+
+		var ls = getLineSegmentFromPath(clsIndx, path);
+
+		return ls.distanceFrom(V);
 	}
-
-
-	interf.getClosestLineSegment = function(position, path) {
-//TODO!!!
-
-		var minIndx = -1;
-		var minDist = Number.MAX_VALUE;
-		for(i=1; i<path.length; i++){
-			var ls = $LS(path[i-1], path[i]);
-
-			var dist = ls.distanceFrom(position);
-
-			if(dist<=minDist){
-
-				// minDist = dist;
-				
-			}
-
-		}
-	}
-
 
 	return interf;
 })(PATH || {});

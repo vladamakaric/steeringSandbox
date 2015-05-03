@@ -1292,8 +1292,19 @@ LineSegment.prototype = {
 		return this;
 	},
 
-
 	length: function() { return this.A.subtract(this.B).length(); },
+
+	pointClosestTo: function(V){
+		var VProj = this.projectOn(V);
+
+		if(VProj!=null)
+			return VProj;
+
+		var dA = V.subtract(this.A).lengthSq();
+		var dB = V.subtract(this.B).lengthSq();
+		
+		return (dA > dB) ? this.B : this.A;
+	},
 
 	projectOn: function(V){
 

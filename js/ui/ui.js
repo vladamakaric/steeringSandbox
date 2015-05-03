@@ -21,7 +21,8 @@ var UI = (function (interf) {
 		var canvasPointerEvents = CanvPtrEventMngr(canvas);
 
 
-		var path = [$V([10,10]), $V([100,100]), $V([200,100])];
+		var path = [$V([10,10]), $V([100,100]), $V([150,100]),
+			$V([100,300])];
 
 		var pointOnPath = $V([0,0]);
 		var advP = $V([10,10]);
@@ -29,18 +30,21 @@ var UI = (function (interf) {
 		canvasPointerEvents.ptrMove = function(pos){
 
 			var V = $V([pos.x, pos.y]);
-			var dist = PATH.getDistance(V, path, 1);
 
-			var cindx = PATH.getClosestVectorIndx(V, path);
-			var locOnPath = PATH.getLocationOnPath(V, path,cindx); 
+			var cindx = PATH.getClosestLSIndx(V, path);
 
-			var aLocOPath = PATH.advancePathLocation(path, locOnPath, 30);
+			var closestLS = $LS(path[cindx], path[cindx+1]);
+
+			var locOnCLS = closestLS.pointClosestTo(V);
+
+			var locOnPath = {pos: locOnCLS, lsIndx: cindx};
+
+			var aLocOPath = PATH.advancePathLocation(path, locOnPath, 70);
 			advP = aLocOPath.pos;
 			
 			pointOnPath = locOnPath.pos;
-			console.log(locOnPath.pos.e(1) + " " +  locOnPath.pos.e(2) + "ln:" + 
-					locOnPath.lsNum);
 
+			console.log(PATH.getDistance(V, path));
 		}
 
 		canvasPointerEvents.attachEvents();
