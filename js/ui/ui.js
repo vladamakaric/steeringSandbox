@@ -17,10 +17,21 @@ var UI = (function (interf) {
 		var canvas = document.getElementById("sboxCanv");
 		var c = canvas.getContext('2d');
 
+
+		////////////////////////////////////
+
+
+		var path = [$V([10,10]), $V([100,100]), $V([200,100])];
+
+
+		///////////////////////////////////
+
 		that.update = function(dt){
 			simulation.update(dt);
 			c.clearRect(0,0, canvas.width, canvas.height);	
 			interf.DRAW.boids(c, simulation.boids, 10);
+
+			DRAW.openPath(c,path);
 		}
 
 		return that;

@@ -1262,6 +1262,10 @@ var $P = Plane.create;
 
 Vector.prototype.length = Vector.prototype.modulus;
 
+Vector.prototype.lengthSq = function(){
+    return Math.sqrt(this.dot(this));
+}
+
 Vector.prototype.to2D = function(){
 	return $V([this.e(1), this.e(2)]);
 }
@@ -1288,14 +1292,20 @@ LineSegment.prototype = {
 		return this;
 	},
 
+
 	length: function() { return this.A.subtract(this.B).length(); },
 
-	isProjectionOn: function(V){
+	projectOn: function(V){
 
   		var VProj = this.line.pointClosestTo(V).to2D();
 
+		return VProj;
+	},
+
+	isProjectionOn: function(VProj){
 		return this.A.subtract(VProj).dot(this.B.subtract(VProj)) < 0;
 	},
+
 
   	distanceFrom: function(V) {
 		if(this.isProjectionOn(V))
