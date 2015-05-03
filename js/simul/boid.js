@@ -1,14 +1,15 @@
 var SIMUL = (function (interf) {
 
-	interf.BoidConstructor = function(state, properties, behaviours){
+	interf.BoidConstructor = function(state, properties, behaviors){
 		var that = {};
 		that.state = state;
 		that.properties = properties;
-		that.behaviours = behaviours;
+		that.behaviors = behaviors;
 
 		that.update = function(dt){
-			var force = STEERING.seek(that, $V([400,100]), 50); 
 
+			//behavior treba da bude enkapsuliran, samo treba da primi boid i to je to.
+			var force = BEHAVIOR.pathFollow(that, behaviors[0], 20, 60); 
 			var acc = force.x(properties.invMass);
 			var vel = state.velocity;
 			var pos = state.position;

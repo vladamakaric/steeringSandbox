@@ -3,13 +3,15 @@ var UI = (function (interf) {
 	interf.UIConstructor = function(){
 		var that = {};
 
+		var path = [$V([100,100]), $V([250,200]),
+			$V([120,500]), $V([500, 500])];
 		var boid = SIMUL.BoidConstructor({position: $V([100,100]),
 										  velocity: $V([0,1]),
 										  orientation: 0}, 
 										  {invMass: 1,
-										   maxForce: 0.05,
+										   maxForce: 0.08,
 										   maxSpeed: 1.7},
-										  null);
+										  [path]);
 
 		var boids = [boid];
 		var simulation = SIMUL.SimulationConstructor(boids, null);
@@ -17,34 +19,13 @@ var UI = (function (interf) {
 		var canvas = document.getElementById("sboxCanv");
 		var c = canvas.getContext('2d');
 
+		DRAW.c = c;
 
 		var canvasPointerEvents = CanvPtrEventMngr(canvas);
 
-
-		var path = [$V([10,10]), $V([100,100]), $V([150,100]),
-			$V([100,300])];
-
-		var pointOnPath = $V([0,0]);
-		var advP = $V([10,10]);
-
-		canvasPointerEvents.ptrMove = function(pos){
-
+		canvasPointerEvents.ptrDown = function(pos){
 			var V = $V([pos.x, pos.y]);
-
-			var cindx = PATH.getClosestLSIndx(V, path);
-
-			var closestLS = $LS(path[cindx], path[cindx+1]);
-
-			var locOnCLS = closestLS.pointClosestTo(V);
-
-			var locOnPath = {pos: locOnCLS, lsIndx: cindx};
-
-			var aLocOPath = PATH.advancePathLocation(path, locOnPath, 70);
-			advP = aLocOPath.pos;
-			
-			pointOnPath = locOnPath.pos;
-
-			console.log(PATH.getDistance(V, path));
+			simulation.boids[0].state.position = V;
 		}
 
 		canvasPointerEvents.attachEvents();
@@ -56,15 +37,9 @@ var UI = (function (interf) {
 		///////////////////////////////////
 
 		that.update = function(dt){
-			simulation.update(dt);
 			c.clearRect(0,0, canvas.width, canvas.height);	
+			simulation.update(dt);
 			interf.DRAW.boids(c, simulation.boids, 10);
-
-			c.fillStyle = 'red';
-			DRAW.point(c, advP);
-
-			c.fillStyle = 'green';
-			DRAW.point(c, pointOnPath);
 			DRAW.openPath(c,path);
 		}
 
