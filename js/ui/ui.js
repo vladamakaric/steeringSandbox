@@ -6,7 +6,9 @@ var UI = (function (interf) {
 		var boid = SIMUL.BoidConstructor({position: $V([100,100]),
 										  velocity: $V([0,1]),
 										  orientation: 0}, 
-										  null,
+										  {invMass: 1,
+										   maxForce: 0.05,
+										   maxSpeed: 1.7},
 										  null);
 
 		var boids = [boid];

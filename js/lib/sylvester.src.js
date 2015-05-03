@@ -26,6 +26,7 @@ var Sylvester = {
 };
 
 
+
 function Vector() {}
 Vector.prototype = {
 
@@ -222,6 +223,7 @@ Vector.prototype = {
   liesOn: function(line) {
     return line.contains(this);
   },
+
 
   // Return true iff the vector is a point in the given plane
   liesIn: function(plane) {
@@ -1255,8 +1257,14 @@ var $M = Matrix.create;
 var $L = Line.create;
 var $P = Plane.create;
 
+/////////////////////////////////////////////////////////////////////////
 // Vladimir Makaric 2015
+
 Vector.prototype.length = Vector.prototype.modulus;
+
+Vector.prototype.to2D = function(){
+	return $V([this.e(1), this.e(2)]);
+}
 
 Vector.prototype.scale = function(len){
 	return this.toUnitVector().x(len);
@@ -1268,3 +1276,42 @@ Vector.prototype.truncate = function(maxLen){
 
 	return this;
 }
+
+
+function LineSegment(){}
+
+LineSegment.prototype = {
+	setEndpoints: function(A,B){
+		this.A = A;
+		this.B = B;
+		this.line = $L(A, A.subtract(B)); 
+		return this;
+	},
+
+	length: function() { return this.A.subtract(this.B).length(); },
+
+	isProjectionOn: function(V){
+
+  		var VProj = this.line.pointClosestTo(V).to2D();
+
+		return this.A.subtract(VProj).dot(this.B.subtract(VProj)) < 0;
+	},
+
+  	distanceFrom: function(V) {
+		if(this.isProjectionOn(V))
+			return this.line.distanceFrom(V); 
+
+		var dA = V.subtract(this.A).length();
+		var dB = V.subtract(this.B).length();
+
+		return Math.min(dA, dB);
+	}
+};
+
+LineSegment.create = function(A, B) {
+  var LS = new LineSegment();
+  return LS.setEndpoints(A,B);
+};
+
+var $LS = LineSegment.create;
+

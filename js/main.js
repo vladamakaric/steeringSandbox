@@ -2,13 +2,15 @@ window.onload = main;
 
 function main(){
 
-	var v1 = $V([3,4]);
-	var v2 = $V([9,-3]);
+	var v1 = $V([0,0]);
+	var v2 = $V([100,100]);
 
-	var A = Line.create([0,0], [2,1]);
-	var B = Line.create([0,100], [1,0]);
-	var v3 = A.intersectionWith(B);
-	console.log(v3.e(1) + ' ' + v3.e(2));
+	var v3 = $V([110,110]);
+
+	var ls1 = $LS(v1,v2);
+
+	
+	console.log(ls1.length() + " " + ls1.isProjectionOn(v3) + " " + ls1.isProjectionOn($V([20,20])));
 
 	var ui = UI.UIConstructor();
 
