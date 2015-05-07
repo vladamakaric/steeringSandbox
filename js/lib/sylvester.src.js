@@ -903,8 +903,10 @@ Line.prototype = {
 
   // Returns the unique intersection point with the argument, if one exists
   intersectionWith: function(obj) {
+
     if (obj.normal) { return obj.intersectionWith(this); }
     if (!this.intersects(obj)) { return null; }
+
     var P = this.anchor.elements, X = this.direction.elements,
         Q = obj.anchor.elements, Y = obj.direction.elements;
     var X1 = X[0], X2 = X[1], X3 = X[2], Y1 = Y[0], Y2 = Y[1], Y3 = Y[2];
@@ -1111,7 +1113,7 @@ Plane.prototype = {
   // Returns the unique intersection with the argument, if one exists. The result
   // will be a vector if a line is supplied, and a line if a plane is supplied.
   intersectionWith: function(obj) {
-    if (!this.intersects(obj)) { return null; }
+    if (!this.intersects(obj)) {  return null; }
     if (obj.direction) {
       // obj is a line
       var A = obj.anchor.elements, D = obj.direction.elements,
@@ -1281,7 +1283,6 @@ Vector.prototype.truncate = function(maxLen){
 	return this;
 }
 
-
 function LineSegment(){}
 
 LineSegment.prototype = {
@@ -1306,6 +1307,18 @@ LineSegment.prototype = {
 		return (dA > dB) ? this.B : this.A;
 	},
 
+  	intersectionWith: function(ls) {
+		
+		var interP = this.line.intersectionWith(ls.line).to2D();
+		if(interP){
+
+			 if(this.isProjectionOn(interP))
+				return interP;
+		}
+
+		return null;
+	},
+
 	projectOn: function(V){
 
   		var VProj = this.line.pointClosestTo(V).to2D();
@@ -1317,6 +1330,7 @@ LineSegment.prototype = {
 	},
 
 	isProjectionOn: function(VProj){
+
 		return this.A.subtract(VProj).dot(this.B.subtract(VProj)) < 0;
 	},
 

@@ -6,10 +6,16 @@ var SIMUL = (function (interf) {
 		that.properties = properties;
 		that.behaviors = behaviors;
 
-		that.update = function(dt){
+		that.update = function(dt, BWI){
+			var force = $V([0,0]);
+			
+			behaviors.forEach(function(bd){
+				var steeringForce = bd.behavior.getSteeringForce(that, BWI);
+				force = force.add(steeringForce.x(bd.weight));
+			});
 
-			//behavior treba da bude enkapsuliran, samo treba da primi boid i to je to.
-			var force = BEHAVIOR.pathFollow(that, behaviors[0], 20, 60); 
+			force = force.truncate(properties.maxForce);
+
 			var acc = force.x(properties.invMass);
 			var vel = state.velocity;
 			var pos = state.position;

@@ -9,7 +9,6 @@ function main(){
 
 	var ls1 = $LS(v1,v2);
 
-	
 	console.log(ls1.length() + " " + ls1.isProjectionOn(v3) + " " + ls1.isProjectionOn($V([20,20])));
 
 	var ui = UI.UIConstructor();
