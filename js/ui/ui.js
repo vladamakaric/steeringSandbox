@@ -36,11 +36,13 @@ var UI = (function (interf) {
 		//privremeno, BWI-u je mesto u simulaciji
 		var BWI = SIMUL.BoidWorldInfoConstructor(simulation);
 
+		var bp = $V([100,150]);
+		var MP = $V([199,199]);
 		var interPDesc = null;
 		canvasPointerEvents.ptrMove = function(pos){
-			var V = $V([pos.x, pos.y]);
+			MP = $V([pos.x, pos.y]);
 
-			var ls = $LS($V([0,0]), V);
+			var ls = $LS(bp, MP);
 
 			interPDesc = BWI.getNearestLineSegmentIntersection(ls, ls.A);
 		}
@@ -51,9 +53,37 @@ var UI = (function (interf) {
 			c.clearRect(0,0, canvas.width, canvas.height);	
 			simulation.update(dt);
 			interf.DRAW.boids(c, simulation.boids, 10);
+
+			DRAW.line(c,bp, MP);
+
 			DRAW.openPath(c,path);
-			if(interPDesc)
+			if(interPDesc){
+
+
+
+				var ls = interPDesc.lineSegment;
+				var pt = interPDesc.intersectionPoint;
+				var proj = ls.line.pointClosestTo(MP).to2D();
+
+				var toEndPoint = MP.subtract(proj).toUnitVector();
+
+				var lsDir = MP.subtract(bp);	
+				var CW = toEndPoint.cross2D(lsDir);
+
+				var normalSpeedCompSize = lsDir.dot(toEndPoint);
+				var steer = lsDir.getCWPerp2D().x(-CW).scale(normalSpeedCompSize);
+
+
+
+
+				
+				console.log(CW);
+				DRAW.line(c, steer.add(proj), proj);
+
+				DRAW.point(c,proj);
 				DRAW.point(c,interPDesc.intersectionPoint);
+			}
+
 		}
 
 		return that;

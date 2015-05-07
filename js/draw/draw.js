@@ -8,6 +8,16 @@ var DRAW = (function(interf){
       c.fill();
 	}
 
+	interf.line = function(c, V1, V2){
+
+		c.beginPath();
+
+		c.moveTo(V1.e(1), V1.e(2));
+		c.lineTo(V2.e(1), V2.e(2));
+		c.stroke();
+
+	}
+
 	interf.openPath = function(c,path){
       c.beginPath();
 

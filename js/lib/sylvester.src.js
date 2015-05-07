@@ -159,8 +159,13 @@ Vector.prototype = {
   // Both vectors must have dimensionality 3
   cross: function(vector) {
     var B = vector.elements || vector;
-    if (this.elements.length != 3 || B.length != 3) { return null; }
     var A = this.elements;
+
+	if(this.elements.length == 2)
+		return (A[0] * B[1]) - (A[1] * B[0]);
+
+
+    if (this.elements.length != 3 || B.length != 3) { return null; }
     return Vector.create([
       (A[1] * B[2]) - (A[2] * B[1]),
       (A[2] * B[0]) - (A[0] * B[2]),
@@ -1283,6 +1288,20 @@ Vector.prototype.truncate = function(maxLen){
 	return this;
 }
 
+Vector.prototype.getCWPerp2D = function(){
+	return $V([this.e(2),-this.e(1)]);
+}
+
+Vector.prototype.cross2D = function(vector){
+    var B = vector.elements || vector;
+    var A = this.elements;
+
+	if(this.elements.length == 2)
+		return (A[0] * B[1]) - (A[1] * B[0]);
+
+	return null;
+}
+
 function LineSegment(){}
 
 LineSegment.prototype = {
@@ -1311,9 +1330,9 @@ LineSegment.prototype = {
 		var interP = this.line.intersectionWith(ls.line);
 
 		if(interP){
-
 			interP = interP.to2D();
-			 if(this.isProjectionOn(interP))
+
+			 if(this.isProjectionOn(interP) && ls.isProjectionOn(interP))
 				return interP;
 		}
 
@@ -1331,7 +1350,6 @@ LineSegment.prototype = {
 	},
 
 	isProjectionOn: function(VProj){
-
 		return this.A.subtract(VProj).dot(this.B.subtract(VProj)) < 0;
 	},
 
