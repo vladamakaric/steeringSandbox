@@ -1308,10 +1308,11 @@ LineSegment.prototype = {
 	},
 
   	intersectionWith: function(ls) {
-		
-		var interP = this.line.intersectionWith(ls.line).to2D();
+		var interP = this.line.intersectionWith(ls.line);
+
 		if(interP){
 
+			interP = interP.to2D();
 			 if(this.isProjectionOn(interP))
 				return interP;
 		}
