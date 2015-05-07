@@ -18,6 +18,18 @@ var DRAW = (function(interf){
 
 	}
 
+	interf.lineSegments = function(c, lss){
+
+      c.beginPath();
+	  lss.forEach( function(ls){
+		  c.moveTo(ls.A.e(1),ls.A.e(2));
+		  c.lineTo(ls.B.e(1),ls.B.e(2));
+	  });
+
+      c.stroke();
+
+	}
+
 	interf.openPath = function(c,path){
       c.beginPath();
 

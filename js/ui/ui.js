@@ -7,6 +7,7 @@ var UI = (function (interf) {
 			$V([120,500]), $V([500, 500])];
 
 
+		
 
 		
 		var boid = SIMUL.BoidConstructor({position: $V([100,100]),
@@ -15,74 +16,52 @@ var UI = (function (interf) {
 										  {invMass: 1,
 										   maxForce: 0.08,
 										   maxSpeed: 1.7},
-										  [{behavior: BEHAVIOR.PathFollowConstructor(path, 20, 60), weight: 1}]);
+										 [ {behavior: BEHAVIOR.WallAvoidConstructor(BEHAVIOR.FrontLateralProngsGenerator(60,40)), weight: 10},
+										   {behavior: BEHAVIOR.PathFollowConstructor(path, 20, 60), weight: 1}]);
 
 		var boids = [boid];
-		var lss = VECTOR_UTIL.getLineSegmentsFromVectorArray(path);
+		var lss = [$LS(path[1], path[2]), $LS(path[2], path[3])];
+		// var lss = VECTOR_UTIL.getLineSegmentsFromVectorArray(path);
 		var simulation = SIMUL.SimulationConstructor(boids, lss);
 
 		var canvas = document.getElementById("sboxCanv");
 		var c = canvas.getContext('2d');
 
+		// var V = path[0];
+        //
+		// var zero = $V([0,0]);
+		// var C = V.rotate(-Math.PI/4, zero);
+
+		// console.log(C.e(1) + " " + C.e(2) + "ROTACIJA");
 		DRAW.c = c;
 
 		var canvasPointerEvents = CanvPtrEventMngr(canvas);
 
-		// canvasPointerEvents.ptrDown = function(pos){
-		// 	var V = $V([pos.x, pos.y]);
-		// 	simulation.boids[0].state.position = V;
-		// }
+		canvasPointerEvents.ptrDown = function(pos){
+			var V = $V([pos.x, pos.y]);
+			simulation.boids[0].state.position = V;
+		}
 
-		//privremeno, BWI-u je mesto u simulaciji
-		var BWI = SIMUL.BoidWorldInfoConstructor(simulation);
 
-		var bp = $V([100,150]);
-		var MP = $V([199,199]);
-		var interPDesc = null;
 		canvasPointerEvents.ptrMove = function(pos){
 			MP = $V([pos.x, pos.y]);
 
-			var ls = $LS(bp, MP);
 
-			interPDesc = BWI.getNearestLineSegmentIntersection(ls, ls.A);
 		}
 
 		canvasPointerEvents.attachEvents();
 
 		that.update = function(dt){
 			c.clearRect(0,0, canvas.width, canvas.height);	
+			c.lineWidth = 2;
+			c.strokeStyle = '#ff0000';
+			DRAW.lineSegments(c,lss);
+			c.lineWidth = 1;
+			c.strokeStyle = '#000000';
 			simulation.update(dt);
 			interf.DRAW.boids(c, simulation.boids, 10);
 
-			DRAW.line(c,bp, MP);
-
 			DRAW.openPath(c,path);
-			if(interPDesc){
-
-
-
-				var ls = interPDesc.lineSegment;
-				var pt = interPDesc.intersectionPoint;
-				var proj = ls.line.pointClosestTo(MP).to2D();
-
-				var toEndPoint = MP.subtract(proj).toUnitVector();
-
-				var lsDir = MP.subtract(bp);	
-				var CW = toEndPoint.cross2D(lsDir);
-
-				var normalSpeedCompSize = lsDir.dot(toEndPoint);
-				var steer = lsDir.getCWPerp2D().x(-CW).scale(normalSpeedCompSize);
-
-
-
-
-				
-				console.log(CW);
-				DRAW.line(c, steer.add(proj), proj);
-
-				DRAW.point(c,proj);
-				DRAW.point(c,interPDesc.intersectionPoint);
-			}
 
 		}
 

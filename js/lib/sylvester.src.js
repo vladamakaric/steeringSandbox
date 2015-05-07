@@ -1312,6 +1312,7 @@ LineSegment.prototype = {
 		return this;
 	},
 
+
 	length: function() { return this.A.subtract(this.B).length(); },
 
 	pointClosestTo: function(V){
@@ -1324,6 +1325,10 @@ LineSegment.prototype = {
 		var dB = V.subtract(this.B).lengthSq();
 		
 		return (dA > dB) ? this.B : this.A;
+	},
+
+	getNormal: function(){
+		return this.A.subtract(this.B).getCWPerp2D();
 	},
 
   	intersectionWith: function(ls) {
