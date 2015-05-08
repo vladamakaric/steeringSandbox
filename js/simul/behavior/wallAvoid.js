@@ -97,7 +97,7 @@ var BEHAVIOR = (function(interf){
 
 			// DRAW.line(DRAW.c, pos, pos.add(normal));
 			var normalVelCompSize = vel.dot(normal);
-			var steeringForce = vel.getCWPerp2D().x(CW).scale(normalVelCompSize*0.05 + 0.002);
+			var steeringForce = vel.getCWPerp2D().x(CW).scale(normalVelCompSize*0.05 + 0.004);
 				
 			// steeringForce = steeringForce.truncate(boid.properties.maxForce);
 			// DRAW.line(DRAW.c, pos, pos.add(steeringForce));

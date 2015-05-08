@@ -3,7 +3,7 @@ var UI = (function (interf) {
 	interf.UIConstructor = function(){
 		var that = {};
 
-		var path = [$V([100,100]), $V([250,200]),
+		var path = [$V([200,100]), $V([300,300]),
 			$V([120,500]), $V([500, 500])];
 
 
@@ -16,11 +16,11 @@ var UI = (function (interf) {
 										  {invMass: 1,
 										   maxForce: 0.08,
 										   maxSpeed: 1.7},
-										 [ {behavior: BEHAVIOR.WallAvoidConstructor(BEHAVIOR.FrontLateralProngsGenerator(50,40)), weight: 1},
+										 [ {behavior: BEHAVIOR.WallAvoidConstructor(BEHAVIOR.FrontLateralProngsGenerator(50,20)), weight: 3},
 										   {behavior: BEHAVIOR.PathFollowConstructor(path, 20, 60), weight: 1}]);
 
 		var boids = [boid];
-		var trans = $V([30, -20]);
+		var trans = $V([40, -16]);
 		var lss = [$LS(path[1].add(trans), path[2].add(trans)), $LS(path[2].add(trans), path[3].add(trans))];
 
 

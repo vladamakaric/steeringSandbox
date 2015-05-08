@@ -14,7 +14,7 @@ var SIMUL = (function (interf) {
 
 				force = force.add(steeringForce.x(bd.weight));
 
-				  // if(steeringForce.lengthSq()>1)
+				  // if(steeringForce.lengthSq() > Sylvester.precision)
 				  // 	return true;
 			});
 
@@ -24,6 +24,8 @@ var SIMUL = (function (interf) {
 			var acc = force.x(properties.invMass);
 			var vel = state.velocity;
 			var pos = state.position;
+
+			console.log(vel.length());
 
 			state.velocity = vel.add(acc.x(dt)).truncate(properties.maxSpeed); 
 			state.position = pos.add(vel.x(dt));
