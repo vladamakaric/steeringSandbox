@@ -14,8 +14,8 @@ var SIMUL = (function (interf) {
 
 				force = force.add(steeringForce.x(bd.weight));
 
-				 if(steeringForce.lengthSq()>1)
-				 	return true;
+				  // if(steeringForce.lengthSq()>1)
+				  // 	return true;
 			});
 
 			force = force.truncate(properties.maxForce);
@@ -30,7 +30,7 @@ var SIMUL = (function (interf) {
 			state.orientation = Math.atan2(state.velocity.e(2), 
 										   state.velocity.e(1));
 
-			DRAW.line(DRAW.c, pos, pos.add(force.x(1000)));
+			// DRAW.line(DRAW.c, pos, pos.add(force.x(1000)));
 		}
 
 		return that;

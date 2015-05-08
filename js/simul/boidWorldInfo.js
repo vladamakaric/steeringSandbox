@@ -3,6 +3,32 @@ var SIMUL = (function (interf) {
 	interf.BoidWorldInfoConstructor = function(simulation){
 		var that = {};
 
+		that.getNearestLineSegmentPoint = function(V){
+			var lineSegs = simulation.lineSegs;
+
+			var closestLS = null;
+			var closestPoint = null;
+			var minSqDistPoint = Number.MAX_VALUE;
+
+			lineSegs.forEach(function(ls){
+
+				var cp = ls.pointClosestTo(V);
+
+				var distSq = cp.subtract(V).lengthSq();
+					
+				if(minSqDistPoint > distSq){
+					minSqDistPoint = distSq;
+					closestPoint = cp;
+					closestLS = ls;
+				}
+			});
+
+			if(closestLS == null)
+				return null;
+
+			return {lineSegment: closestLS, closestPoint: closestPoint};
+		}
+
 		//TODO: Sta ako se desi da je pogodjeno deljeno teme 2 LS-a?
 		//Taj specijalni slucaj bice obradjen jedino ako bude falilo
 		that.getNearestLineSegmentIntersection = function(lineSeg, V){

@@ -16,11 +16,14 @@ var UI = (function (interf) {
 										  {invMass: 1,
 										   maxForce: 0.08,
 										   maxSpeed: 1.7},
-										 [ {behavior: BEHAVIOR.WallAvoidConstructor(BEHAVIOR.FrontLateralProngsGenerator(60,40)), weight: 10},
+										 [ {behavior: BEHAVIOR.WallAvoidConstructor(BEHAVIOR.FrontLateralProngsGenerator(50,40)), weight: 1},
 										   {behavior: BEHAVIOR.PathFollowConstructor(path, 20, 60), weight: 1}]);
 
 		var boids = [boid];
-		var lss = [$LS(path[1], path[2]), $LS(path[2], path[3])];
+		var trans = $V([30, -20]);
+		var lss = [$LS(path[1].add(trans), path[2].add(trans)), $LS(path[2].add(trans), path[3].add(trans))];
+
+
 		// var lss = VECTOR_UTIL.getLineSegmentsFromVectorArray(path);
 		var simulation = SIMUL.SimulationConstructor(boids, lss);
 

@@ -9,8 +9,40 @@ var BEHAVIOR = (function(interf){
 			var sideProng1 = frontProng.rotate(Math.PI/3,$V([0,0])).scale(sprongL);
 			var sideProng2 = frontProng.rotate(-Math.PI/3,$V([0,0])).scale(sprongL);
 
-			return [sideProng2,frontProng];
+			return [frontProng,sideProng2];
 		};
+	}
+
+	interf.WallDistanceConstructor = function(r){
+
+		var that = {};
+
+		that.getSteeringForce = function(boid, BWI){
+
+
+			var vel = boid.state.velocity;
+			var pos = boid.state.position;
+			cpDesc = BWI.getNearestLineSegmentPoint(pos);
+
+			var force = pos.subtract(cpDesc.closestPoint);
+			if(force.length() < r){
+
+				var fDir = vel.getCWPerp2D();
+				
+				fDir = fDir.x(fDir.dot(force));
+
+				return fDir.scale(r/force.length());
+			}
+
+			return $V([0,0]);
+		}
+
+
+
+
+
+		return that;
+
 	}
 
 	interf.WallAvoidConstructor = function(prongsGenFunc){
@@ -58,14 +90,14 @@ var BEHAVIOR = (function(interf){
 			var normal = ls.getNormal().toUnitVector();
 
 			//make normal point away from boid
-			normal = normal.x(normal.dot(prongDelta));
+			normal = normal.x(normal.dot(prongDelta)).toUnitVector();
 			// console.log("Smor");
 
 			var CW = -normal.cross2D(vel);
 
 			// DRAW.line(DRAW.c, pos, pos.add(normal));
 			var normalVelCompSize = vel.dot(normal);
-			var steeringForce = vel.getCWPerp2D().x(CW).scale(normalVelCompSize+5);
+			var steeringForce = vel.getCWPerp2D().x(CW).scale(normalVelCompSize*0.05 + 0.002);
 				
 			// steeringForce = steeringForce.truncate(boid.properties.maxForce);
 			// DRAW.line(DRAW.c, pos, pos.add(steeringForce));
