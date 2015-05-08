@@ -3,13 +3,9 @@ var UI = (function (interf) {
 	interf.UIConstructor = function(){
 		var that = {};
 
-		var path = [$V([200,100]), $V([300,300]),
+		var path = [$V([200,100]), $V([300,200]),
 			$V([120,500]), $V([500, 500])];
 
-
-		
-
-		
 		var boid = SIMUL.BoidConstructor({position: $V([100,100]),
 										  velocity: $V([0,1]),
 										  orientation: 0}, 
@@ -23,19 +19,11 @@ var UI = (function (interf) {
 		var trans = $V([40, -16]);
 		var lss = [$LS(path[1].add(trans), path[2].add(trans)), $LS(path[2].add(trans), path[3].add(trans))];
 
-
-		// var lss = VECTOR_UTIL.getLineSegmentsFromVectorArray(path);
 		var simulation = SIMUL.SimulationConstructor(boids, lss);
 
 		var canvas = document.getElementById("sboxCanv");
 		var c = canvas.getContext('2d');
 
-		// var V = path[0];
-        //
-		// var zero = $V([0,0]);
-		// var C = V.rotate(-Math.PI/4, zero);
-
-		// console.log(C.e(1) + " " + C.e(2) + "ROTACIJA");
 		DRAW.c = c;
 
 		var canvasPointerEvents = CanvPtrEventMngr(canvas);
@@ -48,8 +36,6 @@ var UI = (function (interf) {
 
 		canvasPointerEvents.ptrMove = function(pos){
 			MP = $V([pos.x, pos.y]);
-
-
 		}
 
 		canvasPointerEvents.attachEvents();

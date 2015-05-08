@@ -85,22 +85,21 @@ var BEHAVIOR = (function(interf){
 			var pt = interPDesc.intersectionPoint;
 			
 			DRAW.point(DRAW.c, pt);
-			// var proj = ls.line.pointClosestTo(prongEndPoint).to2D();
 
+			
+			
 			var normal = ls.getNormal().toUnitVector();
 
 			//make normal point away from boid
 			normal = normal.x(normal.dot(prongDelta)).toUnitVector();
-			// console.log("Smor");
 
 			var CW = -normal.cross2D(vel);
 
-			// DRAW.line(DRAW.c, pos, pos.add(normal));
 			var normalVelCompSize = vel.dot(normal);
+
+			//force is applied perpendicular to current speed, and away from wall, that way
+			//the wall doesn't slow down the boid, it only changes it's direction.
 			var steeringForce = vel.getCWPerp2D().x(CW).scale(normalVelCompSize*0.05 + 0.004);
-				
-			// steeringForce = steeringForce.truncate(boid.properties.maxForce);
-			// DRAW.line(DRAW.c, pos, pos.add(steeringForce));
 
 			return steeringForce;
 		}

@@ -9,6 +9,25 @@ h1, h2 {
     width: 700;
 }
 
+#controls {
+	vertical-align: top;
+	padding: 20px;
+
+}
+
+form div {
+	text-align: left;
+	margin-bottom: 20px;
+}
+
+#center > div {
+	text-align: center;
+}
+
+#center div > div {
+	display: inline-block;
+}
+
 #sboxCanv {
 	border:solid 3px #8C9E96;
     padding-left: 0;

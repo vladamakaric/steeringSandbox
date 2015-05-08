@@ -10,7 +10,32 @@
 
 	<div id="center">
 		<h1>Steering sandbox</h1>
-		<canvas id = "sboxCanv" width ="800" height="600"></canvas>
+		<div>
+			<div id="controls">
+				<form id="myForm">
+					<div>
+						Load map:
+						<select name="cars">
+							<option value="volvo">Volvo XC90</option>
+							<option value="saab">Saab 95</option>
+							<option value="mercedes">Mercedes SLK</option>
+							<option value="audi">Audi TT</option>
+						</select>
+					</div>
+					<div>
+						<fieldset>
+							<legend>On click:</legend>
+							<input type="radio" name="animal" value="Dog" />Add boid<br />
+							<input type="radio" name="animal" value="Bird" />Delete boid<br />
+							<input type="radio" name="animal" value="Cat" />Set goal<br />
+						</fieldset>
+					</div>
+				</form>
+			</div>
+			<div>
+				<canvas id = "sboxCanv" width ="800" height="600"></canvas>
+			</div>
+		</div>
 	</div>
 
 	<script src="http://code.jquery.com/jquery-latest.min.js"></script>
