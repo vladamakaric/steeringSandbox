@@ -1312,6 +1312,20 @@ LineSegment.prototype = {
 		return this;
 	},
 
+	intersectsLineSegments: function(lss){
+
+		var that = this;
+		var intersection = false;
+		lss.some(function(ls){
+			if(that.intersectionWith(ls)){
+
+				intersection = true;
+				return true;
+			}
+		});
+
+		return intersection;
+	},
 
 	length: function() { return this.A.subtract(this.B).length(); },
 

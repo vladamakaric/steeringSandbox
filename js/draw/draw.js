@@ -30,7 +30,14 @@ var DRAW = (function(interf){
 
 	}
 
-	interf.openPath = function(c,path){
+	interf.closedPath = function(c,path){
+		openPath(c,path);
+		c.lineTo(path[0].e(1), path[0].e(2));
+		c.stroke();
+	}
+
+	function openPath(c, path){
+
       c.beginPath();
 
 	  var func = c.moveTo;
@@ -38,7 +45,10 @@ var DRAW = (function(interf){
 		  func.call(c, V.e(1), V.e(2));
 		  func = c.lineTo;
 	  });
+	}
 
+	interf.openPath = function(c,path){
+		openPath(c,path);
       c.stroke();
 	}
 

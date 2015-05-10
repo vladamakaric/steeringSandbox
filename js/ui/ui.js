@@ -2,24 +2,44 @@ var UI = (function (interf) {
 
 	interf.UIConstructor = function(){
 		var that = {};
+		var maps = {};
 
-		var path = [$V([200,100]), $V([300,200]),
-			$V([120,500]), $V([500, 500])];
+		$('select').on('change', function() {
+			mapChanged(this.value);
+		});	
 
-		var boid = SIMUL.BoidConstructor({position: $V([100,100]),
-										  velocity: $V([0,1]),
-										  orientation: 0}, 
-										  {invMass: 1,
-										   maxForce: 0.08,
-										   maxSpeed: 1.7},
-										 [ {behavior: BEHAVIOR.WallAvoidConstructor(BEHAVIOR.FrontLateralProngsGenerator(50,20)), weight: 3},
-										   {behavior: BEHAVIOR.PathFollowConstructor(path, 20, 60), weight: 1}]);
+		that.update = function(){};
 
-		var boids = [boid];
-		var trans = $V([40, -16]);
-		var lss = [$LS(path[1].add(trans), path[2].add(trans)), $LS(path[2].add(trans), path[3].add(trans))];
+		// var offsetPaths = null;
+		
+		var clss = null;
+		var lss = null;
+		loadMaps("res/maps.json", function(mapNames, loadedMaps){ 
+			maps = loadedMaps;
 
-		var simulation = SIMUL.SimulationConstructor(boids, lss);
+			populateMapDropDown(mapNames);
+			mapChanged(mapNames[0]);
+
+			that.update = update;
+		});
+
+		// var path = [$V([200,100]), $V([300,200]),
+		// 	$V([120,500]), $V([500, 500])];
+        //
+		// var boid = SIMUL.BoidConstructor({position: $V([100,100]),
+		// 								  velocity: $V([0,1]),
+		// 								  orientation: 0}, 
+		// 								  {invMass: 1,
+		// 								   maxForce: 0.08,
+		// 								   maxSpeed: 1.7},
+		// 								 [ {behavior: BEHAVIOR.WallAvoidConstructor(BEHAVIOR.FrontLateralProngsGenerator(50,20)), weight: 3},
+		// 								   {behavior: BEHAVIOR.PathFollowConstructor(path, 20, 60), weight: 1}]);
+        //
+		// var boids = [boid];
+		// var trans = $V([40, -16]);
+		// var lss = [$LS(path[1].add(trans), path[2].add(trans)), $LS(path[2].add(trans), path[3].add(trans))];
+        //
+		// var simulation = SIMUL.SimulationConstructor(boids, lss);
 
 		var canvas = document.getElementById("sboxCanv");
 		var c = canvas.getContext('2d');
@@ -30,28 +50,75 @@ var UI = (function (interf) {
 
 		canvasPointerEvents.ptrDown = function(pos){
 			var V = $V([pos.x, pos.y]);
-			simulation.boids[0].state.position = V;
+			// simulation.boids[0].state.position = V;
 		}
 
-
 		canvasPointerEvents.ptrMove = function(pos){
-			MP = $V([pos.x, pos.y]);
 		}
 
 		canvasPointerEvents.attachEvents();
 
-		that.update = function(dt){
+		function update(dt){
 			c.clearRect(0,0, canvas.width, canvas.height);	
 			c.lineWidth = 2;
 			c.strokeStyle = '#ff0000';
 			DRAW.lineSegments(c,lss);
-			c.lineWidth = 1;
-			c.strokeStyle = '#000000';
-			simulation.update(dt);
-			interf.DRAW.boids(c, simulation.boids, 10);
 
-			DRAW.openPath(c,path);
+			c.strokeStyle = '#fff000';
+			DRAW.lineSegments(c,clss);
 
+			// offsetPaths.forEach( function(opath){
+            //
+			// 	// DRAW.closedPath(c, opath);
+            //
+            //
+			// });
+
+
+			// c.lineWidth = 1;
+			// c.strokeStyle = '#000000';
+			// simulation.update(dt);
+			// interf.DRAW.boids(c, simulation.boids, 10);
+
+			// DRAW.openPath(c,path);
+		}
+
+		function mapChanged(mapName){
+			lss = maps[mapName].getLineSegments();
+			clss = maps[mapName].getConnectedLineSegments();
+
+			// console.log(clss);
+			// offsetPaths = maps[mapName].getOffsetPaths(20);
+			// console.log(offsetPaths);
+			// VECTOR_UTIL.getPathOffset(maps[mapName].getPolygons()[0].vertices, 20);
+		}
+
+		function populateMapDropDown(mapNames){
+			var $mapSelect = $("select[name=maps]");
+
+			mapNames.forEach(function(mname){
+				$mapSelect.append($('<option>', {"value": mname }).text(mname));
+			});
+		}
+
+		function loadMaps(mapsFileName, loadedCallback){
+			var maps = {};
+
+			$.getJSON(mapsFileName, function(mapnames) {
+				var mapNum = mapnames.length;
+
+				mapnames.forEach(function(mapname){
+
+
+					$.getJSON( "res/" + mapname + ".json", function(mapjson){
+
+						mapNum--;
+						maps[mapname] = MAP.Map(mapjson.polygons);
+
+						if(mapNum==0) loadedCallback(mapnames, maps);
+					});
+				});
+			});
 		}
 
 		return that;

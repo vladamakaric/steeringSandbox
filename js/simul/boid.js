@@ -25,14 +25,12 @@ var SIMUL = (function (interf) {
 			var vel = state.velocity;
 			var pos = state.position;
 
-			console.log(vel.length());
 
 			state.velocity = vel.add(acc.x(dt)).truncate(properties.maxSpeed); 
 			state.position = pos.add(vel.x(dt));
 			state.orientation = Math.atan2(state.velocity.e(2), 
 										   state.velocity.e(1));
 
-			// DRAW.line(DRAW.c, pos, pos.add(force.x(1000)));
 		}
 
 		return that;

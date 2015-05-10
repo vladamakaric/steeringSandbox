@@ -15,11 +15,7 @@
 				<form id="myForm">
 					<div>
 						Load map:
-						<select name="cars">
-							<option value="volvo">Volvo XC90</option>
-							<option value="saab">Saab 95</option>
-							<option value="mercedes">Mercedes SLK</option>
-							<option value="audi">Audi TT</option>
+						<select name="maps">
 						</select>
 					</div>
 					<div>
@@ -29,6 +25,9 @@
 							<input type="radio" name="animal" value="Bird" />Delete boid<br />
 							<input type="radio" name="animal" value="Cat" />Set goal<br />
 						</fieldset>
+					</div>
+					<div>
+						 <button type="button">Clear</button> 
 					</div>
 				</form>
 			</div>
@@ -40,12 +39,15 @@
 
 	<script src="http://code.jquery.com/jquery-latest.min.js"></script>
 
+	<script src="js/lib/clipper_unminified.js"></script>
 	<script src="js/lib/sylvester.src.js"></script>
 	<script src="js/lib/vectorUtil.js"></script>
 	<script src="js/lib/canvasPointerEvents.js"></script>
+	<script src="js/pathFinding/astar.js"></script>
 	<script src="js/global.js"></script>
 	<script src="js/draw/draw.js"></script>
 	<script src="js/path/path.js"></script>
+	<script src="js/map/map.js"></script>
 	<script src="js/simul/behavior/pathFollow.js"></script>
 	<script src="js/simul/behavior/wallAvoid.js"></script>
 	<script src="js/simul/steering/seek.js"></script>
