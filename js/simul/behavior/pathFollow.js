@@ -9,9 +9,26 @@ var BEHAVIOR = (function(interf){
 			var cindx = PATH.getClosestLSIndx(pos, path);
 			var closestLS = $LS(path[cindx], path[cindx+1]);
 			var locOnCLS = closestLS.pointClosestTo(pos);
+
+
+			
+			
+
+			if(locOnCLS == path[0])
+				return STEERING.seek(boid, path[0], 0); 
+
+
+
+
 			var projOnPath = {pos: locOnCLS, lsIndx: cindx};
 			var curSpeed = boid.state.velocity.length()+1;
-			var target = PATH.advancePathLocation(path, projOnPath, prongL);
+
+
+
+
+			var velScale = vel.length()/boid.properties.maxSpeed;
+
+			var target = PATH.advancePathLocation(path, projOnPath, prongL*velScale);
 
 			var future = pos.add(vel.scale(prongL));
 

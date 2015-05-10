@@ -6,10 +6,13 @@ var BEHAVIOR = (function(interf){
 			var vel = boid.state.velocity;
 			var frontProng = vel.x(fprongL);
 		
+			var velLen = vel.length();
 			var sideProng1 = frontProng.rotate(Math.PI/3,$V([0,0])).scale(sprongL);
 			var sideProng2 = frontProng.rotate(-Math.PI/3,$V([0,0])).scale(sprongL);
 
-			return [frontProng,sideProng1, sideProng2];
+			var sideProng3 = frontProng.rotate(Math.PI/6,$V([0,0])).scale(velLen*sprongL);
+			var sideProng4 = frontProng.rotate(-Math.PI/6,$V([0,0])).scale(velLen*sprongL);
+			return [frontProng, sideProng3, sideProng4];
 		};
 	}
 

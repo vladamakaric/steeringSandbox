@@ -70,8 +70,14 @@ var MAP = (function(interf){
 			}
 
 			var startNode = addNodeToGraph(vecA);
+
+			if(!startNode.edges.length)
+				return null;
+
 			var endNode = addNodeToGraph(vecB);
 
+
+			
 			connectNodesIfPossible(startNode,endNode);
 
 			var foundPath = PATH_FINDING.aStar(startNode, endNode);

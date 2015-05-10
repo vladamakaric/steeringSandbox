@@ -40,14 +40,13 @@ var UI = (function (interf) {
 			var V = $V([pos.x,pos.y]);
 
 			var boid =simulation.boids[0];
-
-
+			// boid.state.velocity.setElements([0.001,0.001]);
 			var newPath = currentMap.getShortestPath(V, boid.state.position );
 
 			if(newPath){
 
 				boidPath = newPath;
-			boid.behaviors[1] = {behavior: BEHAVIOR.PathFollowConstructor(boidPath, 20, 60), weight: 1};
+				boid.behaviors[0] = {behavior: BEHAVIOR.PathFollowConstructor(boidPath, 10, 40), weight: 1};
 			}
 
 
@@ -94,8 +93,9 @@ var UI = (function (interf) {
 											  {invMass: 1,
 											   maxForce: 0.08,
 											   maxSpeed: 1.7},
-											 [ {behavior: BEHAVIOR.WallAvoidConstructor(BEHAVIOR.FrontLateralProngsGenerator(50,20)), weight: 3},
-											   {behavior: BEHAVIOR.PathFollowConstructor(boidPath, 20, 60), weight: 1}]);
+											 [ {behavior: BEHAVIOR.PathFollowConstructor(boidPath, 20, 60), weight: 1},
+											   {behavior: BEHAVIOR.WallAvoidConstructor(BEHAVIOR.FrontLateralProngsGenerator(30,20)), weight: 1}
+											   ]);
 
 			var boids = [boid];
 
