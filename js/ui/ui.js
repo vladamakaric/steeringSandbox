@@ -46,7 +46,7 @@ var UI = (function (interf) {
 			if(newPath){
 
 				boidPath = newPath;
-				boid.behaviors[0] = {behavior: BEHAVIOR.PathFollowConstructor(boidPath, 10, 40), weight: 1};
+				boid.behaviors[0] = {behavior: BEHAVIOR.PathFollowConstructor(boidPath, 20, 60), weight: 1};
 			}
 
 
@@ -93,8 +93,8 @@ var UI = (function (interf) {
 											  {invMass: 1,
 											   maxForce: 0.08,
 											   maxSpeed: 1.7},
-											 [ {behavior: BEHAVIOR.PathFollowConstructor(boidPath, 20, 60), weight: 1},
-											   {behavior: BEHAVIOR.WallAvoidConstructor(BEHAVIOR.FrontLateralProngsGenerator(30,20)), weight: 1}
+											 [ {behavior: BEHAVIOR.PathFollowConstructor(boidPath, 20, 60), weight: 1}
+											   // {behavior: BEHAVIOR.WallAvoidConstructor(BEHAVIOR.FrontLateralProngsGenerator(30,20)), weight: 1}
 											   ]);
 
 			var boids = [boid];
