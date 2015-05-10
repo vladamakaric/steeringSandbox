@@ -4,6 +4,8 @@ var UI = (function (interf) {
 		var that = {};
 		var maps = {};
 
+		var currentMap;
+
 		$('select').on('change', function() {
 			mapChanged(this.value);
 		});	
@@ -14,6 +16,7 @@ var UI = (function (interf) {
 		
 		var clss = null;
 		var lss = null;
+		var spath = null;
 		loadMaps("res/maps.json", function(mapNames, loadedMaps){ 
 			maps = loadedMaps;
 
@@ -50,6 +53,7 @@ var UI = (function (interf) {
 
 		canvasPointerEvents.ptrDown = function(pos){
 			var V = $V([pos.x, pos.y]);
+			spath = currentMap.getShortestPath($V([0,0]),V );
 			// simulation.boids[0].state.position = V;
 		}
 
@@ -80,13 +84,21 @@ var UI = (function (interf) {
 			// simulation.update(dt);
 			// interf.DRAW.boids(c, simulation.boids, 10);
 
-			// DRAW.openPath(c,path);
+			c.strokeStyle = '#00ffff';
+			if(spath)
+			DRAW.openPath(c,spath);
 		}
 
 		function mapChanged(mapName){
+			currentMap = maps[mapName];
 			lss = maps[mapName].getLineSegments();
 			clss = maps[mapName].getConnectedLineSegments();
 
+
+			console.log("smor");
+			spath = maps[mapName].getShortestPath($V([0,0]), $V([800,600]));
+
+			console.log(spath);
 			// console.log(clss);
 			// offsetPaths = maps[mapName].getOffsetPaths(20);
 			// console.log(offsetPaths);

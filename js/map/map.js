@@ -7,8 +7,52 @@ var MAP = (function(interf){
 		var lss = getLineSegments(polygons);
 		var nodes = constructGraph(polygons);
 
-		console.log(PATH_FINDING.aStar(nodes[0], nodes[nodes.length-1]));
-		console.log(nodes[nodes.length-1]);
+		// console.log(PATH_FINDING.aStar(nodes[0], nodes[nodes.length-1]));
+		// console.log(nodes[nodes.length-1]);
+
+
+		
+		that.getShortestPath = function(vecA, vecB){
+
+			var startNode = addNodeToGraph(vecA);
+			var endNode = addNodeToGraph(vecB);
+
+			// connectNodesIfPossible(startNode,endNode);
+
+			var foundPath = PATH_FINDING.aStar(startNode, endNode);
+
+			var path = null;
+
+			if(foundPath){
+				 path = extractPath(endNode);
+			}
+
+			removeNodeFromGraph(startNode);
+			removeNodeFromGraph(endNode);
+
+			clearNodesForPathFinding();
+
+
+
+			return path;
+		}
+
+
+		function extractPath(endNode){
+
+			var path = [];
+
+			var node = endNode;
+			
+			while(node != undefined){
+				path.push(node.data);
+				node = node.parent;
+			}
+
+			return path;
+		}
+
+
 
 		that.getConnectedLineSegments = function(){
 
@@ -37,6 +81,8 @@ var MAP = (function(interf){
 			return clss;
 		}
 
+	
+
 		function getLineSegments(polygons){
 
 			var lss = [];
@@ -53,23 +99,53 @@ var MAP = (function(interf){
 
 			return lss;
 		}
+
+		function getOtherNodeOnEdge(node, edge){
+			return (edge.a == node) ? edge.b : edge.a;
+		}
+
+		function removeNodeFromGraph(node){
+			node.edges.forEach(function(edge){
+				removeEdgeFromNode(edge, getOtherNodeOnEdge(node, edge));
+			});
+		}
+
+		function removeEdgeFromNode(edge, node){
+			node.edges.splice(node.edges.indexOf(edge), 1);
+		}
+				
+		function addNodeToGraph(vec){
+
+			var newNode = Node(vec);
+
+			nodes.forEach(function(node){
+				connectNodesIfPossible(newNode,node);
+			});
+
+			return newNode;
+		}
+
+		function clearNodesForPathFinding(){
+			nodes.forEach(function(node){
+				node.cost = node.status = node.parent =  undefined;
+			});
+		}
 	
+		function createEdge(nodeA, nodeB, cost){
+			return {a: nodeA, b: nodeB, cost: cost};
+		}
+
+		function Node(data){
+			return {data: data, edges: [], h: 0};
+		}
+
 		function constructGraph(polygons){
-			function createNode(data){
-				return {data: data, edges: [], h: 0};
-			}
-
-			function createEdge(nodeA, nodeB, cost){
-				return {a: nodeA, b: nodeB, cost: cost};
-			}
-
-
 			var opaths = getOffsetPaths(polygons, 20);
 			var nodes = [];
 
 			opaths.forEach(function(opath){
 				opath.forEach(function(vec){
-					nodes.push(createNode(vec));
+					nodes.push(Node(vec));
 				});
 			});
 
@@ -77,23 +153,24 @@ var MAP = (function(interf){
 
 			for(var i=0; i<nodes.length-1; i++){
 				for(var j=i+1; j<nodes.length; j++){
-
-					var nodeA = nodes[i]; 
-					var nodeB = nodes[j]; 
-
-					var ls = $LS(nodeA.data, nodeB.data);
-
-					if(!ls.intersectsLineSegments(lss)){
-						var edge  = createEdge(nodeA, nodeB, ls.length());
-						nodeA.edges.push(edge);
-						nodeB.edges.push(edge);
-					}
+					connectNodesIfPossible(nodes[i], nodes[j]);
 				}
 			}
 
 			console.log(nodes);
 			return nodes;
 		}
+
+		function connectNodesIfPossible(nodeA, nodeB){
+			var ls = $LS(nodeA.data, nodeB.data);
+
+			if(!ls.intersectsLineSegments(lss)){
+				var edge  = createEdge(nodeA, nodeB, ls.length());
+				nodeA.edges.push(edge);
+				nodeB.edges.push(edge);
+			}
+		}
+
 
 		that.getPolygons = function(){ return polygons;}
 

@@ -1,5 +1,6 @@
 var PATH_FINDING = (function(interf){
 
+	//precondition: all nodes must have cost = undefined, and status = undefined
 	interf.aStar= function(startNode, goalNode){
 
 		var NODE_STATUS = {visited: 1, closed: 2};
