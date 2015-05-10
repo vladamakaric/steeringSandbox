@@ -7,7 +7,7 @@ var VECTOR_UTIL = (function(interf){
 		var clPath = [];
 
 		path.forEach(function(vertex){
-			clPath.push({X: vertex.x, Y:vertex.y});
+			clPath.push({X: vertex.e(1), Y:vertex.e(2)});
 		});
 
 		co.AddPath(clPath, ClipperLib.JoinType.jtMiter, ClipperLib.EndType.etClosedPolygon);
@@ -17,6 +17,21 @@ var VECTOR_UTIL = (function(interf){
 		co.Execute(offsetted_paths, offset);
 
 		return getSylvesterVecsFormBigXYVecs(offsetted_paths[0]);
+	}
+
+	interf.getLineSegmentsFromPaths = function(paths){
+
+		var lss = [];
+		paths.forEach(function(path){
+
+			for(var i=0; i<path.length; i++){
+				var A = path[i];
+				var B = path[(i+1)%path.length];
+				lss.push($LS(A, B));
+			}
+		});
+
+		return lss;
 	}
 
 	function getSylvesterVecsFormBigXYVecs(bigXYVecs){
@@ -29,6 +44,16 @@ var VECTOR_UTIL = (function(interf){
 		return sylVecs;
 	}
 	
+	function getSylvesterVecsFormSmallxyVecs(bigXYVecs){
+		var sylVecs = [];
+
+		bigXYVecs.forEach(function(V){
+			sylVecs.push( $V([V.x, V.y]));
+		});
+
+		return sylVecs;
+	}
+
 	interf.getLineSegmentsFromVectorArray = function(vecArr){
 
 		lss = [];

@@ -95,7 +95,7 @@ var UI = (function (interf) {
 
 		function mapChanged(mapName){
 			currentMap = maps[mapName];
-			lss = maps[mapName].getLineSegments();
+			lss = maps[mapName].getPolygonLineSegments();
 			clss = maps[mapName].getConnectedLineSegments();
 
 			console.log("smor");
