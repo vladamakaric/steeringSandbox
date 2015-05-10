@@ -9,7 +9,7 @@ var BEHAVIOR = (function(interf){
 			var sideProng1 = frontProng.rotate(Math.PI/3,$V([0,0])).scale(sprongL);
 			var sideProng2 = frontProng.rotate(-Math.PI/3,$V([0,0])).scale(sprongL);
 
-			return [frontProng,sideProng2];
+			return [frontProng,sideProng1, sideProng2];
 		};
 	}
 
@@ -99,7 +99,7 @@ var BEHAVIOR = (function(interf){
 
 			//force is applied perpendicular to current speed, and away from wall, that way
 			//the wall doesn't slow down the boid, it only changes it's direction.
-			var steeringForce = vel.getCWPerp2D().x(CW).scale(normalVelCompSize*0.05 + 0.004);
+			var steeringForce = vel.getCWPerp2D().x(CW).scale(normalVelCompSize*0.05 + 0.04);
 
 			return steeringForce;
 		}
