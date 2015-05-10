@@ -1369,7 +1369,13 @@ LineSegment.prototype = {
 	},
 
 	isProjectionOn: function(VProj){
-		return this.A.subtract(VProj).dot(this.B.subtract(VProj)) < 0;
+		var dot = this.A.subtract(VProj).dot(this.B.subtract(VProj));
+
+		//projection on endpoint
+		if(Math.abs(dot) < Sylvester.precision)
+			return true;
+
+		return dot < 0;
 	},
 
 

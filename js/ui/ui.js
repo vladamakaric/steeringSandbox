@@ -14,6 +14,8 @@ var UI = (function (interf) {
 
 		// var offsetPaths = null;
 		
+		var ls1 = $LS($V([100, 90]), $V([200, 90]));
+		var ls2 = $LS($V([150, 90]), $V([0,0]));
 		var clss = null;
 		var lss = null;
 		var spath = null;
@@ -52,8 +54,9 @@ var UI = (function (interf) {
 		var canvasPointerEvents = CanvPtrEventMngr(canvas);
 
 		canvasPointerEvents.ptrDown = function(pos){
-			var V = $V([pos.x, pos.y]);
+			var V = $V([pos.x,pos.y]);
 			spath = currentMap.getShortestPath($V([0,0]),V );
+			// console.log(V.e(1));
 			// simulation.boids[0].state.position = V;
 		}
 
@@ -71,6 +74,7 @@ var UI = (function (interf) {
 			c.strokeStyle = '#fff000';
 			DRAW.lineSegments(c,clss);
 
+			// DRAW.lineSegments(c, [ls1, ls2]);
 			// offsetPaths.forEach( function(opath){
             //
 			// 	// DRAW.closedPath(c, opath);
@@ -93,7 +97,6 @@ var UI = (function (interf) {
 			currentMap = maps[mapName];
 			lss = maps[mapName].getLineSegments();
 			clss = maps[mapName].getConnectedLineSegments();
-
 
 			console.log("smor");
 			spath = maps[mapName].getShortestPath($V([0,0]), $V([800,600]));

@@ -1,7 +1,6 @@
 var VECTOR_UTIL = (function(interf){
 
 	interf.getPathOffset = function(path, offset){
-
 		var miterLimit = 2;
 		var arcTolerance = 0.25;
 		var co = new ClipperLib.ClipperOffset(miterLimit, arcTolerance);
@@ -19,7 +18,6 @@ var VECTOR_UTIL = (function(interf){
 
 		return getSylvesterVecsFormBigXYVecs(offsetted_paths[0]);
 	}
-	
 
 	function getSylvesterVecsFormBigXYVecs(bigXYVecs){
 		var sylVecs = [];
@@ -39,10 +37,8 @@ var VECTOR_UTIL = (function(interf){
 			lss.push($LS(vecArr[i-1], vecArr[i]));
 		}
 
-
 		return lss;
 	}
-
 
 	return interf;
 

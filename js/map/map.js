@@ -4,20 +4,16 @@ var MAP = (function(interf){
 
 	interf.Map = function(polygons){
 		var that = {};
-		var lss = getLineSegments(polygons);
+		var dlss = getLineSegments(polygons);
+		var lss = getOffsetLineSegments(polygons);
 		var nodes = constructGraph(polygons);
-
-		// console.log(PATH_FINDING.aStar(nodes[0], nodes[nodes.length-1]));
-		// console.log(nodes[nodes.length-1]);
-
-
 		
 		that.getShortestPath = function(vecA, vecB){
 
 			var startNode = addNodeToGraph(vecA);
 			var endNode = addNodeToGraph(vecB);
 
-			// connectNodesIfPossible(startNode,endNode);
+			connectNodesIfPossible(startNode,endNode);
 
 			var foundPath = PATH_FINDING.aStar(startNode, endNode);
 
@@ -137,6 +133,23 @@ var MAP = (function(interf){
 
 		function Node(data){
 			return {data: data, edges: [], h: 0};
+		}
+
+		function getOffsetLineSegments(polygons){
+
+			var olss = [];
+			var opaths = getOffsetPaths(polygons, 10);
+
+			opaths.forEach(function(opath){
+				for(var i=0; i<opath.length; i++){
+
+					var A = opath[i];
+					var B = opath[(i+1)%opath.length];
+					olss.push($LS(A, B));
+				}
+			});
+
+			return olss;
 		}
 
 		function constructGraph(polygons){

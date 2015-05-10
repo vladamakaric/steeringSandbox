@@ -17,6 +17,7 @@ var DRAW = (function(interf){
 		c.stroke();
 
 	}
+	
 
 	interf.lineSegments = function(c, lss){
 
