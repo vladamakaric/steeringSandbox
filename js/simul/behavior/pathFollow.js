@@ -28,7 +28,7 @@ var BEHAVIOR = (function(interf){
 			var projToTarget = target.pos.subtract(projOnPath.pos);
 
 			var distToCP = cpDesc.closestPoint.subtract(pos).length();
-			var r = 30;
+			var r = 25;
 
 			var future = pos.add(vel.scale(prongL));
 
@@ -53,7 +53,6 @@ var BEHAVIOR = (function(interf){
 				if(scale>0.8 && futureInCapsule)
 				goal = goal.add(targetToFuture.x(scale));
 
-
 				DRAW.point(DRAW.c, goal);
 
 
@@ -70,7 +69,7 @@ var BEHAVIOR = (function(interf){
 			var arriveR = 0;
 		
 			if(targetIsGoal)
-				arriveR = capsuleR;
+				arriveR = capsuleR*2;
 
 			return STEERING.seek(boid, target.pos, arriveR);
 		}

@@ -46,7 +46,7 @@ var UI = (function (interf) {
 			if(newPath){
 
 				boidPath = newPath;
-				boid.behaviors[0] = {behavior: BEHAVIOR.PathFollowConstructor(boidPath, 20, 60), weight: 1};
+				boid.behaviors[0] = {behavior: BEHAVIOR.PathFollowConstructor(boidPath, 10, 40), weight: 1};
 			}
 
 
