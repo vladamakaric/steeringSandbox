@@ -3,11 +3,12 @@ var UI = (function (interf) {
 
 
 	interf.DRAW = {
-	boids: function(c, boids, r){
+	boids: function(c, boids){
 		function drawBoid(boid){
 		  c.beginPath();
 		  var x = boid.state.position.e(1);
 		  var y = boid.state.position.e(2);
+		  var r = boid.properties.radius;
 		  c.arc(x, y, r, 0, 2 * Math.PI, false);
 		  c.fillStyle = 'green';
 		  c.fill();

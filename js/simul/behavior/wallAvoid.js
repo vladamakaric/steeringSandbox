@@ -16,6 +16,16 @@ var BEHAVIOR = (function(interf){
 		};
 	}
 
+	interf.WallRepell = function(){
+
+		var that = {};
+
+
+
+		return that;
+
+	}
+
 
 	interf.WallAvoid = function(innerR, outerR){
 
@@ -37,7 +47,25 @@ var BEHAVIOR = (function(interf){
 			normal = normal.x(normal.dot(toBoid)).toUnitVector();
 			var dist = toBoid.length();
 
+				
+
+
+
 			if(dist>outerR)
+				return $V([0,0]);
+
+			var future = pos.add(vel.x(20));
+			// DRAW.point(DRAW.c, future);
+			var futureDist = cpDesc.lineSegment.distanceFrom(future);
+
+			var futureDistR = cpDesc.lineSegment.distanceFrom(pos.add(vel.scale(boid.properties.radius)));
+
+			DRAW.point(DRAW.c, pos.add(vel.scale(boid.properties.radius)));
+
+			if(futureDistR<boid.properties.radius*0.7)
+				alert("alpha smor");
+
+			if(futureDist>innerR)
 				return $V([0,0]);
 
 			var scale = dist/innerR;
@@ -47,15 +75,28 @@ var BEHAVIOR = (function(interf){
 
 			var followDir = lsDir.x(headOnImpactFactor*dist);
 
+			var minDisp = 10;
+			if(followDir.length()<minDisp){
+
+				followDir = followDir.scale(minDisp);
+
+
+				
+			}
 
 			var distFromLS = innerR;
 			
+			// if(Math.abs(headOnImpactFactor)<0.2){	
+			// 	distFromLS = innerR + (1-headOnImpactFactor/0.2)*20;
+			// 	// alert("juu");
+			// }
 
 			// distFromLS += (1-headOnImpactFactor)*(outerR-innerR);
 			
+			
 			var targetPos = cpDesc.closestPoint.add(followDir).add(normal.scale(distFromLS));
 
-				DRAW.point(DRAW.c, targetPos);
+			DRAW.point(DRAW.c, targetPos);
 			return STEERING.seek(boid, targetPos, 0);
 		}
 
@@ -88,7 +129,7 @@ var BEHAVIOR = (function(interf){
 			if(Math.random()>0.9)
 				angleVel=0;
 
-			angle+=angleVel;
+			// angle+=angleVel;
 			var rand = $V([Math.cos(angle), Math.sin(angle)]).x(r);
 
 

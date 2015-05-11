@@ -31,6 +31,7 @@ var SIMUL = (function (interf) {
 
 		//TODO: Sta ako se desi da je pogodjeno deljeno teme 2 LS-a?
 		//Taj specijalni slucaj bice obradjen jedino ako bude falilo
+		//E pa zatrebalo je:
 		that.getNearestLineSegmentIntersection = function(lineSeg, V){
 
 			var lineSegs = simulation.lineSegs;

@@ -84,9 +84,9 @@ var UI = (function (interf) {
 
 			c.lineWidth = 1;
 			c.strokeStyle = '#000000';
-			simulation.update(dt);
-			interf.DRAW.boids(c, simulation.boids, 10);
+			interf.DRAW.boids(c, simulation.boids);
 
+			simulation.update(dt);
 			c.strokeStyle = '#00ffff';
 			if(boidPath)
 				DRAW.openPath(c, boidPath);
@@ -106,11 +106,12 @@ var UI = (function (interf) {
 											  orientation: 0}, 
 											  {invMass: 1,
 											   maxForce: 0.08,
-											   maxSpeed: 1.7},
+											   maxSpeed: 1.7,
+											   radius: 10},
 											 [ 
 											 // {behavior: BEHAVIOR.PathFollowConstructor(boidPath, 20, 60), weight: 1}
 											 {behavior: BEHAVIOR.Wander(50, 60), weight: 0.2},
-											 {behavior: BEHAVIOR.WallAvoid(20,40), weight:50}
+											 {behavior: BEHAVIOR.WallAvoid(20,50), weight:50}
 											    // {behavior: BEHAVIOR.WallAvoidConstructor(BEHAVIOR.FrontLateralProngsGenerator(50,24)), weight: 1.7}
 											   ]);
 
