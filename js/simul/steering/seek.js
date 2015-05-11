@@ -1,6 +1,10 @@
 var STEERING = (function (interf) {
 
-	interf.seek = function(boid, dest, arriveR){
+	interf.seek = function(boid, dest, arriveR, scaleForce){
+
+
+		scaleForce = scaleForce || 1;
+
 		var vel = boid.state.velocity;
 		var pos = boid.state.position;
 		var maxSpeed = boid.properties.maxSpeed;
@@ -17,7 +21,7 @@ var STEERING = (function (interf) {
 		}
 
 		var force = destVel.subtract(vel).truncate(maxForce);
-		return force;
+		return force.x(scaleForce);
 	}
 
 	return interf;

@@ -1342,7 +1342,11 @@ LineSegment.prototype = {
 	},
 
 	getNormal: function(){
-		return this.A.subtract(this.B).getCWPerp2D();
+		return this.getDir().getCWPerp2D();
+	},
+
+	getDir: function(){
+		return this.A.subtract(this.B);
 	},
 
   	intersectionWith: function(ls) {

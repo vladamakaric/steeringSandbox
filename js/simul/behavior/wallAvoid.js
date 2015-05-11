@@ -16,41 +16,105 @@ var BEHAVIOR = (function(interf){
 		};
 	}
 
-	interf.WallDistanceConstructor = function(r){
+
+	interf.WallAvoid = function(innerR, outerR){
 
 		var that = {};
 
 		that.getSteeringForce = function(boid, BWI){
 
-
 			var vel = boid.state.velocity;
 			var pos = boid.state.position;
-			cpDesc = BWI.getNearestLineSegmentPoint(pos);
 
-			var force = pos.subtract(cpDesc.closestPoint);
-			if(force.length() < r){
+			//NEVALJA!!! Treba da izbaci 2 LS-a, pa da biram!!! 
+			var cpDesc = BWI.getNearestLineSegmentPoint(pos);
 
-				var fDir = vel.getCWPerp2D();
-				
-				fDir = fDir.x(fDir.dot(force));
 
-				return fDir.scale(r/force.length());
-			}
+			var normal = cpDesc.lineSegment.getNormal();
+			// var normal =
 
-			return $V([0,0]);
+			var toBoid =pos.subtract(cpDesc.closestPoint); 
+			normal = normal.x(normal.dot(toBoid)).toUnitVector();
+			var dist = toBoid.length();
+
+			if(dist>outerR)
+				return $V([0,0]);
+
+			var scale = dist/innerR;
+			var lsDir = cpDesc.lineSegment.getDir().toUnitVector();
+
+			var headOnImpactFactor= lsDir.dot(vel.toUnitVector());
+
+			var followDir = lsDir.x(headOnImpactFactor*dist);
+
+
+			var distFromLS = innerR;
+			
+
+			// distFromLS += (1-headOnImpactFactor)*(outerR-innerR);
+			
+			var targetPos = cpDesc.closestPoint.add(followDir).add(normal.scale(distFromLS));
+
+				DRAW.point(DRAW.c, targetPos);
+			return STEERING.seek(boid, targetPos, 0);
 		}
 
+		return that;
+	}
 
 
 
+	interf.Wander = function(r, d){
+		var that = {};
+		var angle = Math.PI/2;
+		var angleVel = 0.00;
+
+
+		that.getSteeringForce = function(boid, BWI){
+			var vel = boid.state.velocity;
+			var pos = boid.state.position;
+
+			var future = vel.scale(d);
+
+
+			
+			var amount = Math.random()*0.02;
+
+			if(Math.random()>0.5)
+				amount=-amount;
+
+			angleVel+=amount;
+
+			if(Math.random()>0.9)
+				angleVel=0;
+
+			angle+=angleVel;
+			var rand = $V([Math.cos(angle), Math.sin(angle)]).x(r);
+
+
+			var seekTarget = pos.add(future.add(rand));
+
+			// DRAW.circleOutline(DRAW.c, pos.add(future), r);
+			// DRAW.line(DRAW.c, pos, seekTarget);
+
+			var future = pos.add(vel.x(r));
+
+			if(Math.random()>0.95)
+				return STEERING.seek(boid, future, 0);
+
+			return STEERING.seek(boid, seekTarget, 0);
+		}
 
 		return that;
 
+
+
+
 	}
+
 
 	interf.WallAvoidConstructor = function(prongsGenFunc){
 		var that = {};
-		var counter = 0;
 
 
 		
@@ -58,7 +122,6 @@ var BEHAVIOR = (function(interf){
 
 		that.getSteeringForce = function(boid, BWI){
 
-			// counter++;
 			var vel = boid.state.velocity;
 			var pos = boid.state.position;
 

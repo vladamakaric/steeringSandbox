@@ -8,6 +8,17 @@ var DRAW = (function(interf){
       c.fill();
 	}
 
+
+
+	interf.circleOutline = function(c, V, r){
+
+      c.beginPath();
+      c.arc(V.e(1), V.e(2), r, 0, 2 * Math.PI, false);
+      // c.fillStyle = 'green';
+      c.stroke();
+
+	}
+
 	interf.line = function(c, V1, V2){
 
 		c.beginPath();

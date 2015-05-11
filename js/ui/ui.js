@@ -19,6 +19,7 @@ var UI = (function (interf) {
 		var lss = null;
 		var simulation = null;	
 
+
 		loadMaps("res/maps.json", function(mapNames, loadedMaps){ 
 			maps = loadedMaps;
 
@@ -36,10 +37,24 @@ var UI = (function (interf) {
 
 		var canvasPointerEvents = CanvPtrEventMngr(canvas);
 
+		var moveBoid = false;
+		$(document).keydown(function(e){
+		if (e.keyCode==90)
+			moveBoid=!moveBoid;
+		});
+
+
 		canvasPointerEvents.ptrDown = function(pos){
+
 			var V = $V([pos.x,pos.y]);
 
 			var boid =simulation.boids[0];
+			
+				boid.state.position = V;
+				return;
+
+
+
 			// boid.state.velocity.setElements([0.001,0.001]);
 			var newPath = currentMap.getShortestPath(V, boid.state.position );
 
@@ -51,7 +66,6 @@ var UI = (function (interf) {
 
 
 			// console.log(V.e(1));
-			// simulation.boids[0].state.position = V;
 		}
 
 		canvasPointerEvents.ptrMove = function(pos){
@@ -93,8 +107,11 @@ var UI = (function (interf) {
 											  {invMass: 1,
 											   maxForce: 0.08,
 											   maxSpeed: 1.7},
-											 [ {behavior: BEHAVIOR.PathFollowConstructor(boidPath, 20, 60), weight: 1}
-											   // {behavior: BEHAVIOR.WallAvoidConstructor(BEHAVIOR.FrontLateralProngsGenerator(30,20)), weight: 1}
+											 [ 
+											 // {behavior: BEHAVIOR.PathFollowConstructor(boidPath, 20, 60), weight: 1}
+											 {behavior: BEHAVIOR.Wander(50, 60), weight: 0.2},
+											 {behavior: BEHAVIOR.WallAvoid(20,40), weight:50}
+											    // {behavior: BEHAVIOR.WallAvoidConstructor(BEHAVIOR.FrontLateralProngsGenerator(50,24)), weight: 1.7}
 											   ]);
 
 			var boids = [boid];
