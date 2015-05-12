@@ -39,13 +39,14 @@ var SIMUL = (function (interf) {
 			//najblizi je cosak koji dele ove dve duzi
 			if(ls2 && closestLS){
 
-				var ls3Dir  = V.subtract(closestPoint).getCWPerp2D();
+				var ls3Dir  = V.subtract(closestPoint).getCWPerp2D().scale(2);
 
-				var ls3 = $LS(closestPoint.add(ls3Dir.x(-2)), closestPoint.add(ls3Dir));
+
+				var ls3 = $LS(closestPoint.add(ls3Dir.x(-1)), closestPoint.add(ls3Dir));
 
 
 				
-				return {lineSegment: ls3, closestPoint: closestPoint};
+				return {lineSegment: ls3, closestPoint: closestPoint, corner: true};
 			}
 
 			return {lineSegment: closestLS, closestPoint: closestPoint};

@@ -10,9 +10,7 @@ var SIMUL = (function (interf) {
 
 		that.update = function(dt, BWI){
 			var force = $V([0,0]);
-			
-			var cpDesc = BWI.getNearestLineSegmentPoint(state.position);
-
+			var cpDesc = BWI.getNearestLineSegmentPoint(that.state.position, that.state.velocity);
 			var worldInfo = {cpDesc:cpDesc};
 			
 			if(!evadeBehav){
@@ -20,10 +18,7 @@ var SIMUL = (function (interf) {
 				var vel = state.velocity;
 
 				var future = vel.scale(properties.radius*2);
-
 				var futureDistR = cpDesc.lineSegment.distanceFrom(pos.add(future));
-
-				// DRAW.point(DRAW.c, pos.add(future));
 
 				if(!BWI.isPathClear($LS(pos,pos.add(future))))
 				{
@@ -48,19 +43,13 @@ var SIMUL = (function (interf) {
 				var steeringForce = bd.behavior.getSteeringForce(that, worldInfo, BWI );
 
 				force = force.add(steeringForce.x(bd.weight));
-
-				  // if(steeringForce.lengthSq() > Sylvester.precision)
-				  // 	return true;
 			});
 
 			force = force.truncate(properties.maxForce);
 
-
 			var acc = force.x(properties.invMass);
 			var vel = state.velocity;
 			var pos = state.position;
-
-
 
 			state.velocity = vel.add(acc.x(dt)).truncate(properties.maxSpeed); 
 
@@ -71,7 +60,6 @@ var SIMUL = (function (interf) {
 											   state.velocity.e(1));
 			}
 		}
-
 		return that;
 	}
 

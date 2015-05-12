@@ -65,13 +65,8 @@ var BEHAVIOR = (function(interf){
 			var vel = boid.state.velocity;
 			var pos = boid.state.position;
 
-			//NEVALJA!!! Treba da izbaci 2 LS-a, pa da biram!!! 
 			var cpDesc = worldInfo.cpDesc;
-
-
 			var normal = cpDesc.lineSegment.getNormal();
-			// var normal =
-
 			var toBoid =pos.subtract(cpDesc.closestPoint); 
 			normal = normal.x(normal.dot(toBoid)).toUnitVector();
 			var dist = toBoid.length();
@@ -79,14 +74,17 @@ var BEHAVIOR = (function(interf){
 			if(dist>outerR)
 				return $V([0,0]);
 
-			var future = pos.add(vel.x(20));
-			// DRAW.point(DRAW.c, future);
+			var future = pos.add(vel.x(10));
+			DRAW.point(DRAW.c, future);
 			var futureDist = cpDesc.lineSegment.distanceFrom(future);
 
+			// if(cpDesc.corner) futureDist = cpDesc.closestPoint.subtract(future).length();
 
-			if(futureDist>innerR && dist>innerR)
+	
+			if((futureDist>innerR && dist>innerR))
 				return $V([0,0]);
 
+		
 			var scale = dist/innerR;
 			var lsDir = cpDesc.lineSegment.getDir().toUnitVector();
 
@@ -101,7 +99,9 @@ var BEHAVIOR = (function(interf){
 
 			var distFromLS = innerR;
 			
-			
+
+
+
 			var targetPos = cpDesc.closestPoint.add(followDir).add(normal.scale(distFromLS));
 			var cpTargetDesc = BWI.getNearestLineSegmentPoint(targetPos);
 
