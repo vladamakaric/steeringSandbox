@@ -16,10 +16,35 @@ var BEHAVIOR = (function(interf){
 		};
 	}
 
-	interf.WallRepell = function(){
+	interf.WallRepell = function(boid, cpDesc){
 
 		var that = {};
 
+		var vel = boid.state.velocity;
+		var pos = boid.state.position;
+
+		var normal = cpDesc.lineSegment.getNormal();
+			// var normal =
+
+		var toBoid =pos.subtract(cpDesc.closestPoint); 
+		normal = normal.x(normal.dot(toBoid)).toUnitVector();
+
+
+		var interP =  cpDesc.lineSegment.line.intersectionWith($L(pos, vel)).to2D();
+
+		var goal = cpDesc.closestPoint.add(normal.scale(boid.properties.radius*2));
+
+		that.getSteeringForce = function(boid, worldInfo){
+
+
+			// DRAW.point(DRAW.c, goal);
+			if(boid.state.position.subtract(goal).length()<4)
+			{
+				return null;
+			}
+
+			return STEERING.seek(boid, goal, 7);
+		}
 
 
 		return that;
@@ -31,13 +56,13 @@ var BEHAVIOR = (function(interf){
 
 		var that = {};
 
-		that.getSteeringForce = function(boid, BWI){
+		that.getSteeringForce = function(boid, worldInfo, BWI){
 
 			var vel = boid.state.velocity;
 			var pos = boid.state.position;
 
 			//NEVALJA!!! Treba da izbaci 2 LS-a, pa da biram!!! 
-			var cpDesc = BWI.getNearestLineSegmentPoint(pos);
+			var cpDesc = worldInfo.cpDesc;
 
 
 			var normal = cpDesc.lineSegment.getNormal();
@@ -47,10 +72,6 @@ var BEHAVIOR = (function(interf){
 			normal = normal.x(normal.dot(toBoid)).toUnitVector();
 			var dist = toBoid.length();
 
-				
-
-
-
 			if(dist>outerR)
 				return $V([0,0]);
 
@@ -58,14 +79,8 @@ var BEHAVIOR = (function(interf){
 			// DRAW.point(DRAW.c, future);
 			var futureDist = cpDesc.lineSegment.distanceFrom(future);
 
-			var futureDistR = cpDesc.lineSegment.distanceFrom(pos.add(vel.scale(boid.properties.radius)));
 
-			DRAW.point(DRAW.c, pos.add(vel.scale(boid.properties.radius)));
-
-			if(futureDistR<boid.properties.radius*0.7)
-				alert("alpha smor");
-
-			if(futureDist>innerR)
+			if(futureDist>innerR && dist>innerR)
 				return $V([0,0]);
 
 			var scale = dist/innerR;
@@ -77,24 +92,30 @@ var BEHAVIOR = (function(interf){
 
 			var minDisp = 10;
 			if(followDir.length()<minDisp){
-
 				followDir = followDir.scale(minDisp);
-
-
-				
 			}
 
 			var distFromLS = innerR;
 			
-			// if(Math.abs(headOnImpactFactor)<0.2){	
-			// 	distFromLS = innerR + (1-headOnImpactFactor/0.2)*20;
-			// 	// alert("juu");
-			// }
-
-			// distFromLS += (1-headOnImpactFactor)*(outerR-innerR);
-			
 			
 			var targetPos = cpDesc.closestPoint.add(followDir).add(normal.scale(distFromLS));
+			var cpTargetDesc = BWI.getNearestLineSegmentPoint(targetPos);
+
+			//ako je u cosku i krenuo na pogresnu stranu, obrni
+			if(cpTargetDesc.closestPoint.subtract(targetPos).length()<15)
+				targetPos = cpDesc.closestPoint.add(followDir.x(-1.4)).add(normal.scale(distFromLS));
+			
+			if(!BWI.isPathClear($LS(pos, targetPos)))
+			{
+				targetPos = cpDesc.closestPoint.add(normal.scale(distFromLS));
+
+				alert("JOOOOJ");
+			}
+
+
+
+
+			
 
 			DRAW.point(DRAW.c, targetPos);
 			return STEERING.seek(boid, targetPos, 0);
@@ -103,21 +124,16 @@ var BEHAVIOR = (function(interf){
 		return that;
 	}
 
-
-
 	interf.Wander = function(r, d){
 		var that = {};
-		var angle = Math.PI/2;
+		var angle = Math.PI;
 		var angleVel = 0.00;
-
 
 		that.getSteeringForce = function(boid, BWI){
 			var vel = boid.state.velocity;
 			var pos = boid.state.position;
 
 			var future = vel.scale(d);
-
-
 			
 			var amount = Math.random()*0.02;
 
@@ -129,7 +145,7 @@ var BEHAVIOR = (function(interf){
 			if(Math.random()>0.9)
 				angleVel=0;
 
-			// angle+=angleVel;
+			angle+=angleVel;
 			var rand = $V([Math.cos(angle), Math.sin(angle)]).x(r);
 
 
@@ -138,10 +154,10 @@ var BEHAVIOR = (function(interf){
 			// DRAW.circleOutline(DRAW.c, pos.add(future), r);
 			// DRAW.line(DRAW.c, pos, seekTarget);
 
-			var future = pos.add(vel.x(r));
+			var futureSeek = pos.add(vel.x(r));
 
 			if(Math.random()>0.95)
-				return STEERING.seek(boid, future, 0);
+				return STEERING.seek(boid, futureSeek, 0);
 
 			return STEERING.seek(boid, seekTarget, 0);
 		}

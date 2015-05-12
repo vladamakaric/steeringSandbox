@@ -6,11 +6,45 @@ var SIMUL = (function (interf) {
 		that.properties = properties;
 		that.behaviors = behaviors;
 
+		var evadeBehav = null;
+
 		that.update = function(dt, BWI){
 			var force = $V([0,0]);
 			
+			var cpDesc = BWI.getNearestLineSegmentPoint(state.position);
+
+			var worldInfo = {cpDesc:cpDesc};
+			
+			if(!evadeBehav){
+				var pos = state.position;
+				var vel = state.velocity;
+
+				var future = vel.scale(properties.radius);
+
+				var futureDistR = cpDesc.lineSegment.distanceFrom(pos.add(future));
+
+				// DRAW.point(DRAW.c, pos.add(future));
+
+				if(!BWI.isPathClear($LS(pos,pos.add(future))))
+				{
+					evadeBehav = BEHAVIOR.WallRepell(that,cpDesc);
+					that.properties.maxForce = 0.2;
+				}
+			}
+
+			if(evadeBehav)
+			{
+				force = evadeBehav.getSteeringForce(that);
+				if(force === null)
+				{
+					force = $V([0,0]);
+					evadeBehav = null;
+					that.properties.maxForce = 0.08;
+				}
+			}
+			else
 			behaviors.some(function(bd){
-				var steeringForce = bd.behavior.getSteeringForce(that, BWI);
+				var steeringForce = bd.behavior.getSteeringForce(that, worldInfo, BWI );
 
 				force = force.add(steeringForce.x(bd.weight));
 

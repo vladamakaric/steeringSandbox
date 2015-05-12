@@ -3,7 +3,7 @@ var BEHAVIOR = (function(interf){
 	interf.PathFollowConstructor = function(path, capsuleR, prongL){
 		var that = {};
 
-		that.getSteeringForce = function(boid, BWI){
+		that.getSteeringForce = function(boid, worldInfo){
 			var pos = boid.state.position;
 			var vel = boid.state.velocity;
 			var cindx = PATH.getClosestLSIndx(pos, path);
@@ -13,7 +13,7 @@ var BEHAVIOR = (function(interf){
 			// if(locOnCLS == path[0])
 			// 	return STEERING.seek(boid, path[0], 0); 
 
-			var cpDesc = BWI.getNearestLineSegmentPoint(pos);
+			var cpDesc = worldInfo.cpDesc;
 
 
 

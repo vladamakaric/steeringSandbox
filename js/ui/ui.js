@@ -110,7 +110,7 @@ var UI = (function (interf) {
 											   radius: 10},
 											 [ 
 											 // {behavior: BEHAVIOR.PathFollowConstructor(boidPath, 20, 60), weight: 1}
-											 {behavior: BEHAVIOR.Wander(50, 60), weight: 0.2},
+											 {behavior: BEHAVIOR.Wander(50, 60), weight: 1},
 											 {behavior: BEHAVIOR.WallAvoid(20,50), weight:50}
 											    // {behavior: BEHAVIOR.WallAvoidConstructor(BEHAVIOR.FrontLateralProngsGenerator(50,24)), weight: 1.7}
 											   ]);

@@ -29,6 +29,16 @@ var SIMUL = (function (interf) {
 			return {lineSegment: closestLS, closestPoint: closestPoint};
 		}
 
+
+		that.isPathClear = function(lineSeg){
+
+			var lineSegs = simulation.lineSegs;
+
+			return !lineSeg.intersectsLineSegments(lineSegs);
+		}
+
+
+
 		//TODO: Sta ako se desi da je pogodjeno deljeno teme 2 LS-a?
 		//Taj specijalni slucaj bice obradjen jedino ako bude falilo
 		//E pa zatrebalo je:
@@ -60,11 +70,6 @@ var SIMUL = (function (interf) {
 
 			return {lineSegment: closestLS, intersectionPoint: closestIP};
 		}
-
-
-
-
-
 
 		that.getNeighborsInRadius = function(r){
 
