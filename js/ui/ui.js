@@ -111,7 +111,7 @@ var UI = (function (interf) {
 											 [ 
 											  {behavior: BEHAVIOR.PathFollowConstructor(boidPath, 20, 60), weight: 1},
 											 // {behavior: BEHAVIOR.Wander(50, 60), weight: 1},
-											 {behavior: BEHAVIOR.WallAvoid(20,50), weight:20}
+											 {behavior: BEHAVIOR.WallAvoid(20,40), weight:40}
 											    // {behavior: BEHAVIOR.WallAvoidConstructor(BEHAVIOR.FrontLateralProngsGenerator(50,24)), weight: 1.7}
 											   ]);
 

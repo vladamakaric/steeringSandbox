@@ -39,7 +39,7 @@ var SIMUL = (function (interf) {
 			//najblizi je cosak koji dele ove dve duzi
 			if(ls2 && closestLS){
 
-				var ls3Dir  = V.subtract(closestPoint).getCWPerp2D().scale(2);
+				var ls3Dir  = V.subtract(closestPoint).getCWPerp2D().scale(1);
 
 
 				var ls3 = $LS(closestPoint.add(ls3Dir.x(-1)), closestPoint.add(ls3Dir));

@@ -80,7 +80,30 @@ var BEHAVIOR = (function(interf){
 
 			// if(cpDesc.corner) futureDist = cpDesc.closestPoint.subtract(future).length();
 
+			var velNorm = vel.getCWPerp2D().scale(10);
+
+
+
+
+			// if( dist > innerR &&  BWI.isPathClear($LS(pos, pos.add(vel.x(25).add(velNorm)))) && 
+			// BWI.isPathClear($LS(pos, pos.add(vel.x(25).add(velNorm.x(-1))))))
+			// 	return $V([0,0]);
 	
+			
+			if(cpDesc.corner)
+				console.log(futureDist);
+
+			// if(cpDesc.corner && futureDist>innerR*0.6)
+			// {
+			// 	return $V([0,0]);
+            //
+			// }
+			// else if(cpDesc.corner)
+			// {
+            //
+			// 	// alert("smor");
+			// }
+            //
 			if((futureDist>innerR && dist>innerR))
 				return $V([0,0]);
 
