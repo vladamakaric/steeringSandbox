@@ -32,13 +32,17 @@ var BEHAVIOR = (function(interf){
 
 		var interP =  cpDesc.lineSegment.line.intersectionWith($L(pos, vel)).to2D();
 
-		var goal = cpDesc.closestPoint.add(normal.scale(boid.properties.radius*2));
+		var goal = cpDesc.closestPoint.add(normal.scale(boid.properties.radius*2.2));
+
+		var startVel = vel.dup();
 
 		that.getSteeringForce = function(boid, worldInfo){
 
+			vel = boid.state.velocity;
 
-			// DRAW.point(DRAW.c, goal);
-			if(boid.state.position.subtract(goal).length()<4)
+			pos = boid.state.position;
+			DRAW.point(DRAW.c, goal);
+			if(startVel.dot(vel)<-0.9 || pos.subtract(goal).length()<2)
 			{
 				return null;
 			}
@@ -102,22 +106,17 @@ var BEHAVIOR = (function(interf){
 			var cpTargetDesc = BWI.getNearestLineSegmentPoint(targetPos);
 
 			//ako je u cosku i krenuo na pogresnu stranu, obrni
-			if(cpTargetDesc.closestPoint.subtract(targetPos).length()<15)
+			if(cpTargetDesc.closestPoint.subtract(targetPos).length()<17){
+				console.log("JEEEEEEE");
 				targetPos = cpDesc.closestPoint.add(followDir.x(-1.4)).add(normal.scale(distFromLS));
+			}
 			
 			if(!BWI.isPathClear($LS(pos, targetPos)))
 			{
 				targetPos = cpDesc.closestPoint.add(normal.scale(distFromLS));
-
-				alert("JOOOOJ");
 			}
 
-
-
-
-			
-
-			DRAW.point(DRAW.c, targetPos);
+			// DRAW.point(DRAW.c, targetPos);
 			return STEERING.seek(boid, targetPos, 0);
 		}
 
@@ -126,7 +125,7 @@ var BEHAVIOR = (function(interf){
 
 	interf.Wander = function(r, d){
 		var that = {};
-		var angle = Math.PI;
+		var angle = Math.PI/2 + Math.PI;
 		var angleVel = 0.00;
 
 		that.getSteeringForce = function(boid, BWI){
@@ -145,7 +144,7 @@ var BEHAVIOR = (function(interf){
 			if(Math.random()>0.9)
 				angleVel=0;
 
-			angle+=angleVel;
+			// angle+=angleVel;
 			var rand = $V([Math.cos(angle), Math.sin(angle)]).x(r);
 
 

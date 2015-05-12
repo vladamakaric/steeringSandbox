@@ -19,7 +19,7 @@ var SIMUL = (function (interf) {
 				var pos = state.position;
 				var vel = state.velocity;
 
-				var future = vel.scale(properties.radius);
+				var future = vel.scale(properties.radius*2);
 
 				var futureDistR = cpDesc.lineSegment.distanceFrom(pos.add(future));
 
@@ -27,8 +27,9 @@ var SIMUL = (function (interf) {
 
 				if(!BWI.isPathClear($LS(pos,pos.add(future))))
 				{
+					console.log("obrt!!!");
 					evadeBehav = BEHAVIOR.WallRepell(that,cpDesc);
-					that.properties.maxForce = 0.2;
+					that.properties.maxForce = 0.3;
 				}
 			}
 
