@@ -61,11 +61,15 @@ var SIMUL = (function (interf) {
 			var pos = state.position;
 
 
-			state.velocity = vel.add(acc.x(dt)).truncate(properties.maxSpeed); 
-			state.position = pos.add(vel.x(dt));
-			state.orientation = Math.atan2(state.velocity.e(2), 
-										   state.velocity.e(1));
 
+			state.velocity = vel.add(acc.x(dt)).truncate(properties.maxSpeed); 
+
+			if(state.velocity.lengthSq()>0.05)
+			{
+				state.position = pos.add(vel.x(dt));
+				state.orientation = Math.atan2(state.velocity.e(2), 
+											   state.velocity.e(1));
+			}
 		}
 
 		return that;

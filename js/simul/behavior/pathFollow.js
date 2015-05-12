@@ -15,10 +15,6 @@ var BEHAVIOR = (function(interf){
 
 			var cpDesc = worldInfo.cpDesc;
 
-
-
-
-
 			var projOnPath = {pos: locOnCLS, lsIndx: cindx};
 			var curSpeed = boid.state.velocity.length()+1;
 			var velScale = vel.length()/boid.properties.maxSpeed;
@@ -71,6 +67,7 @@ var BEHAVIOR = (function(interf){
 			if(targetIsGoal)
 				arriveR = capsuleR*2;
 
+			console.log("target reached");
 			return STEERING.seek(boid, target.pos, arriveR);
 		}
 		return that;

@@ -111,10 +111,10 @@ var BEHAVIOR = (function(interf){
 				targetPos = cpDesc.closestPoint.add(followDir.x(-1.4)).add(normal.scale(distFromLS));
 			}
 			
-			if(!BWI.isPathClear($LS(pos, targetPos)))
-			{
-				targetPos = cpDesc.closestPoint.add(normal.scale(distFromLS));
-			}
+			// if(!BWI.isPathClear($LS(pos, targetPos)))
+			// {
+			// 	targetPos = cpDesc.closestPoint.add(normal.scale(distFromLS));
+			// }
 
 			// DRAW.point(DRAW.c, targetPos);
 			return STEERING.seek(boid, targetPos, 0);

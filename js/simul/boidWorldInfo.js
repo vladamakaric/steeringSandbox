@@ -10,21 +10,43 @@ var SIMUL = (function (interf) {
 			var closestPoint = null;
 			var minSqDistPoint = Number.MAX_VALUE;
 
+			var ls2 = null;
 			lineSegs.forEach(function(ls){
 
 				var cp = ls.pointClosestTo(V);
 
+
+				if(closestPoint){
+					if(cp.eql(closestPoint))
+						ls2 = ls; 
+				}
+
 				var distSq = cp.subtract(V).lengthSq();
+
+				
 					
 				if(minSqDistPoint > distSq){
 					minSqDistPoint = distSq;
 					closestPoint = cp;
 					closestLS = ls;
+					ls2 = null;
 				}
 			});
 
 			if(closestLS == null)
 				return null;
+
+			//najblizi je cosak koji dele ove dve duzi
+			if(ls2 && closestLS){
+
+				var ls3Dir  = V.subtract(closestPoint).getCWPerp2D();
+
+				var ls3 = $LS(closestPoint.add(ls3Dir.x(-2)), closestPoint.add(ls3Dir));
+
+
+				
+				return {lineSegment: ls3, closestPoint: closestPoint};
+			}
 
 			return {lineSegment: closestLS, closestPoint: closestPoint};
 		}
