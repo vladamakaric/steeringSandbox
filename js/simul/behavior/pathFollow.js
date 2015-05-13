@@ -31,7 +31,7 @@ var BEHAVIOR = (function(interf){
 
 			var futureInCapsule = PATH.getDistance(future, path) < capsuleR; 
 
-			if(distToCP<r){
+			if(false && distToCP<r){
 
 				var scale = distToCP/r;
 				scale*=scale*scale*scale*scale*scale;
@@ -67,7 +67,6 @@ var BEHAVIOR = (function(interf){
 			if(targetIsGoal)
 				arriveR = capsuleR*2;
 
-			console.log("target reached");
 			return STEERING.seek(boid, target.pos, arriveR);
 		}
 		return that;

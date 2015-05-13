@@ -24,13 +24,8 @@ var BEHAVIOR = (function(interf){
 		var pos = boid.state.position;
 
 		var normal = cpDesc.lineSegment.getNormal();
-			// var normal =
-
 		var toBoid =pos.subtract(cpDesc.closestPoint); 
 		normal = normal.x(normal.dot(toBoid)).toUnitVector();
-
-
-		var interP =  cpDesc.lineSegment.line.intersectionWith($L(pos, vel)).to2D();
 
 		var goal = cpDesc.closestPoint.add(normal.scale(boid.properties.radius*2.2));
 
@@ -39,20 +34,16 @@ var BEHAVIOR = (function(interf){
 		that.getSteeringForce = function(boid, worldInfo){
 
 			vel = boid.state.velocity;
-
 			pos = boid.state.position;
-			DRAW.point(DRAW.c, goal);
+
 			if(startVel.dot(vel)<-0.9 || pos.subtract(goal).length()<2)
-			{
 				return null;
-			}
 
 			return STEERING.seek(boid, goal, 7);
 		}
 
 
 		return that;
-
 	}
 
 
@@ -66,49 +57,19 @@ var BEHAVIOR = (function(interf){
 			var pos = boid.state.position;
 
 			var cpDesc = worldInfo.cpDesc;
-			var normal = cpDesc.lineSegment.getNormal();
 			var toBoid =pos.subtract(cpDesc.closestPoint); 
-			normal = normal.x(normal.dot(toBoid)).toUnitVector();
 			var dist = toBoid.length();
 
 			if(dist>outerR)
 				return $V([0,0]);
 
 			var future = pos.add(vel.x(10));
-			DRAW.point(DRAW.c, future);
+			// DRAW.point(DRAW.c, future);
 			var futureDist = cpDesc.lineSegment.distanceFrom(future);
 
-			// if(cpDesc.corner) futureDist = cpDesc.closestPoint.subtract(future).length();
-
-			var velNorm = vel.getCWPerp2D().scale(10);
-
-
-
-
-			// if( dist > innerR &&  BWI.isPathClear($LS(pos, pos.add(vel.x(25).add(velNorm)))) && 
-			// BWI.isPathClear($LS(pos, pos.add(vel.x(25).add(velNorm.x(-1))))))
-			// 	return $V([0,0]);
-	
-			
-			if(cpDesc.corner)
-				console.log(futureDist);
-
-			// if(cpDesc.corner && futureDist>innerR*0.6)
-			// {
-			// 	return $V([0,0]);
-            //
-			// }
-			// else if(cpDesc.corner)
-			// {
-            //
-			// 	// alert("smor");
-			// }
-            //
 			if((futureDist>innerR && dist>innerR))
 				return $V([0,0]);
 
-		
-			var scale = dist/innerR;
 			var lsDir = cpDesc.lineSegment.getDir().toUnitVector();
 
 			var headOnImpactFactor= lsDir.dot(vel.toUnitVector());
@@ -121,25 +82,26 @@ var BEHAVIOR = (function(interf){
 			}
 
 			var distFromLS = innerR;
-			
 
-
-
+			var normal = cpDesc.lineSegment.getNormal();
+			normal = normal.x(normal.dot(toBoid)).toUnitVector();
 			var targetPos = cpDesc.closestPoint.add(followDir).add(normal.scale(distFromLS));
 			var cpTargetDesc = BWI.getNearestLineSegmentPoint(targetPos);
 
+
+			var targetClosestDist =cpTargetDesc.closestPoint.subtract(targetPos).length();	
+
+			//Nikad tacka nesme pracenja nesme da se udalji vise od distFromLS, to moze da se desi zobg virtuelnih LS
+			if(targetClosestDist>distFromLS){
+				targetPos = cpTargetDesc.closestPoint.add(cpTargetDesc.closestPoint.subtract(targetPos).scale(-distFromLS));
+
+			}else
 			//ako je u cosku i krenuo na pogresnu stranu, obrni
-			if(cpTargetDesc.closestPoint.subtract(targetPos).length()<17){
-				console.log("JEEEEEEE");
+			if(targetClosestDist<17){
 				targetPos = cpDesc.closestPoint.add(followDir.x(-1.4)).add(normal.scale(distFromLS));
 			}
 			
-			// if(!BWI.isPathClear($LS(pos, targetPos)))
-			// {
-			// 	targetPos = cpDesc.closestPoint.add(normal.scale(distFromLS));
-			// }
-
-			// DRAW.point(DRAW.c, targetPos);
+			DRAW.point(DRAW.c, targetPos);
 			return STEERING.seek(boid, targetPos, 0);
 		}
 
