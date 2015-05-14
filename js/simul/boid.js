@@ -1,51 +1,37 @@
 var SIMUL = (function (interf) {
 
-	interf.BoidConstructor = function(state, properties, behaviors){
+	interf.Boid = function(state, properties, tacticStack){
 		var that = {};
 		that.state = state;
 		that.properties = properties;
-		that.behaviors = behaviors;
 
-		var evadeBehav = null;
+		that.pushTacticOnStack = function(tactic){
+			tacticStack.push(tactic);
+		}
+
+		that.isObstacleCollisionImminent = function(BWI){
+			var pos = state.position;
+			var vel = state.velocity;
+
+			var future = vel.scale(properties.radius*2);
+			return !BWI.isPathClear($LS(pos, pos.add(future)));
+		}
 
 		that.update = function(dt, BWI){
 			var force = $V([0,0]);
-			var cpDesc = BWI.getNearestLineSegmentPoint(that.state.position, that.state.velocity);
-			var worldInfo = {cpDesc:cpDesc};
-			
-			if(!evadeBehav){
-				var pos = state.position;
-				var vel = state.velocity;
+			var currentTactic = tacticStack.last();
+			var nextStep = tacticStack.last().getNextStep(that, BWI);
 
-				var future = vel.scale(properties.radius*2);
-				var futureDistR = cpDesc.lineSegment.distanceFrom(pos.add(future));
+			while( nextStep.status != TACTIC.IN_PROGRESS ){
 
-				if(!BWI.isPathClear($LS(pos,pos.add(future))))
-				{
-					console.log("obrt!!!");
-					evadeBehav = BEHAVIOR.WallRepell(that,cpDesc);
-					that.properties.maxForce = 0.3;
-				}
+				if(nextStep.status == TACTIC.FINISHED)
+					tacticStack.pop();
+
+				currentTactic = tacticStack.last();
+				nextStep = currentTactic.getNextStep(that, BWI);
 			}
 
-			if(evadeBehav)
-			{
-				force = evadeBehav.getSteeringForce(that);
-				if(force === null)
-				{
-					force = $V([0,0]);
-					evadeBehav = null;
-					that.properties.maxForce = 0.08;
-				}
-			}
-			else
-			behaviors.some(function(bd){
-				var steeringForce = bd.behavior.getSteeringForce(that, worldInfo, BWI );
-
-				force = force.add(steeringForce.x(bd.weight));
-			});
-
-			force = force.truncate(properties.maxForce);
+			force = nextStep.force;
 
 			var acc = force.x(properties.invMass);
 			var vel = state.velocity;

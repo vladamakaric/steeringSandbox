@@ -4,11 +4,11 @@ var SIMUL = (function (interf) {
 		var that = {};
 		that.boids = boids;
 		that.lineSegs = lineSegs;
-		var BWI = interf.BoidWorldInfoConstructor(that);
 
 		that.update = function(dt){
 
 			boids.forEach(function(boid){
+				var BWI = SIMUL.BoidWorldInfo(boid, that);
 				boid.update(dt, BWI);
 			});
 		}

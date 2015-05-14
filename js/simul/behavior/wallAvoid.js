@@ -51,57 +51,51 @@ var BEHAVIOR = (function(interf){
 
 		var that = {};
 
-		that.getSteeringForce = function(boid, worldInfo, BWI){
-
+		that.getSteeringForce = function(boid, BWI){
 			var vel = boid.state.velocity;
 			var pos = boid.state.position;
 
-			var cpDesc = worldInfo.cpDesc;
-			var toBoid =pos.subtract(cpDesc.closestPoint); 
+			var COP = BWI.closestObstacleInfo.closestPoint;
+			var toBoid = pos.subtract(COP); 
 			var dist = toBoid.length();
 
 			if(dist>outerR)
 				return $V([0,0]);
 
 			var future = pos.add(vel.x(10));
-			// DRAW.point(DRAW.c, future);
-			var futureDist = cpDesc.lineSegment.distanceFrom(future);
+			var futureDist = BWI.getDistanceToObstacle(future, BWI.closestObstacleInfo); 
 
 			if((futureDist>innerR && dist>innerR))
 				return $V([0,0]);
 
-			var lsDir = cpDesc.lineSegment.getDir().toUnitVector();
-
-			var headOnImpactFactor= lsDir.dot(vel.toUnitVector());
-
-			var followDir = lsDir.x(headOnImpactFactor*dist);
+			var tangentDir = toBoid.getCWPerp2D().toUnitVector();
+			var headOnImpactFactor = tangentDir.dot(vel.toUnitVector());
+			var tangentFollowDisplacement = tangentDir.x(headOnImpactFactor*dist);
 
 			var minDisp = 10;
-			if(followDir.length()<minDisp){
-				followDir = followDir.scale(minDisp);
+			if(tangentFollowDisplacement.length()<minDisp){
+				tangentFollowDisplacement = tangentFollowDisplacement.scale(minDisp);
 			}
 
-			var distFromLS = innerR;
+			var distFromObstacle = innerR;
 
-			var normal = cpDesc.lineSegment.getNormal();
-			normal = normal.x(normal.dot(toBoid)).toUnitVector();
-			var targetPos = cpDesc.closestPoint.add(followDir).add(normal.scale(distFromLS));
-			var cpTargetDesc = BWI.getNearestLineSegmentPoint(targetPos);
+			var targetPos = COP.add(tangentFollowDisplacement).add(toBoid.scale(distFromObstacle));
+			var targetCOI = BWI.getClosestObstacleInfoOfPoint(targetPos);
 
-
-			var targetClosestDist =cpTargetDesc.closestPoint.subtract(targetPos).length();	
+			var targetCOP = targetCOI.closestPoint;
+			var targetObstacleDistance = targetCOP.distanceFrom(targetPos);
 
 			//Nikad tacka nesme pracenja nesme da se udalji vise od distFromLS, to moze da se desi zobg virtuelnih LS
-			if(targetClosestDist>distFromLS){
-				targetPos = cpTargetDesc.closestPoint.add(cpTargetDesc.closestPoint.subtract(targetPos).scale(-distFromLS));
+			if(targetObstacleDistance>distFromObstacle){
+				targetPos = targetCOP.add(targetPos.subtract(targetCOP).scale(distFromObstacle));
 
 			}else
 			//ako je u cosku i krenuo na pogresnu stranu, obrni
-			if(targetClosestDist<17){
-				targetPos = cpDesc.closestPoint.add(followDir.x(-1.4)).add(normal.scale(distFromLS));
+			if(targetObstacleDistance<17){
+				targetPos = COP.add(tangentFollowDisplacement.x(-1.4)).add(toBoid.scale(distFromObstacle));
 			}
 			
-			DRAW.point(DRAW.c, targetPos);
+			// DRAW.point(DRAW.c, targetPos);
 			return STEERING.seek(boid, targetPos, 0);
 		}
 

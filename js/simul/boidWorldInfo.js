@@ -1,9 +1,15 @@
 var SIMUL = (function (interf) {
 
-	interf.BoidWorldInfoConstructor = function(simulation){
+	interf.BoidWorldInfo = function(boid, simulation){
 		var that = {};
 
-		that.getNearestLineSegmentPoint = function(V){
+
+		that.getDistanceToObstacle = function(V, obstacleInfo){
+			var dists = obstacleInfo.lineSegments.map(function(ls){ return ls.distanceFrom(V); });
+			return dists.min();
+		}
+
+		that.getClosestObstacleInfoOfPoint = function (V){
 			var lineSegs = simulation.lineSegs;
 
 			var closestLS = null;
@@ -15,7 +21,6 @@ var SIMUL = (function (interf) {
 
 				var cp = ls.pointClosestTo(V);
 
-
 				if(closestPoint){
 					if(cp.eql(closestPoint))
 						ls2 = ls; 
@@ -23,8 +28,6 @@ var SIMUL = (function (interf) {
 
 				var distSq = cp.subtract(V).lengthSq();
 
-				
-					
 				if(minSqDistPoint > distSq){
 					minSqDistPoint = distSq;
 					closestPoint = cp;
@@ -36,22 +39,15 @@ var SIMUL = (function (interf) {
 			if(closestLS == null)
 				return null;
 
-			//najblizi je cosak koji dele ove dve duzi
-			if(ls2 && closestLS){
+			lss = [];
+			lss.push(closestLS);
+			if(ls2)
+				lss.push(ls2);
 
-				var ls3Dir  = V.subtract(closestPoint).getCWPerp2D().scale(111);
-
-
-				var ls3 = $LS(closestPoint.add(ls3Dir.x(-1)), closestPoint.add(ls3Dir));
-
-
-				
-				return {lineSegment: ls3, closestPoint: closestPoint, corner: true};
-			}
-
-			return {lineSegment: closestLS, closestPoint: closestPoint};
+			return {closestPoint: closestPoint, lineSegments: lss};
 		}
 
+		that.closestObstacleInfo = that.getClosestObstacleInfoOfPoint(boid.state.position);
 
 		that.isPathClear = function(lineSeg){
 
@@ -60,11 +56,8 @@ var SIMUL = (function (interf) {
 			return !lineSeg.intersectsLineSegments(lineSegs);
 		}
 
-
-
 		//TODO: Sta ako se desi da je pogodjeno deljeno teme 2 LS-a?
 		//Taj specijalni slucaj bice obradjen jedino ako bude falilo
-		//E pa zatrebalo je:
 		that.getNearestLineSegmentIntersection = function(lineSeg, V){
 
 			var lineSegs = simulation.lineSegs;
@@ -95,7 +88,6 @@ var SIMUL = (function (interf) {
 		}
 
 		that.getNeighborsInRadius = function(r){
-
 			return null;
 		}
 

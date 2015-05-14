@@ -29,7 +29,6 @@ var UI = (function (interf) {
 			that.update = update;
 		});
 
-
 		var canvas = document.getElementById("sboxCanv");
 		var c = canvas.getContext('2d');
 
@@ -101,7 +100,7 @@ var UI = (function (interf) {
 
 			boidPath =currentMap.getShortestPath(endPoint, boidPos); 
 
-			var boid = SIMUL.BoidConstructor({position: boidPos,
+			var boid = SIMUL.Boid({position: boidPos,
 											  velocity: $V([0,1]),
 											  orientation: 0}, 
 											  {invMass: 1,
@@ -109,10 +108,11 @@ var UI = (function (interf) {
 											   maxSpeed: 1.7,
 											   radius: 10},
 											 [ 
-											  {behavior: BEHAVIOR.PathFollowConstructor(boidPath, 20, 60), weight: 1},
+											 	TACTIC.GoToDestinationInFlock()
+											 // {behavior: BEHAVIOR.PathFollowConstructor(boidPath, 20, 60), weight: 1},
 											 // {behavior: BEHAVIOR.Wander(50, 60), weight: 1},
-											 {behavior: BEHAVIOR.WallAvoid(20,40), weight:40}
-											    // {behavior: BEHAVIOR.WallAvoidConstructor(BEHAVIOR.FrontLateralProngsGenerator(50,24)), weight: 1.7}
+											 // {behavior: BEHAVIOR.WallAvoid(20,40), weight:40}
+											 // {behavior: BEHAVIOR.WallAvoidConstructor(BEHAVIOR.FrontLateralProngsGenerator(50,24)), weight: 1.7}
 											   ]);
 
 			var boids = [boid];
