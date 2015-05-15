@@ -1,6 +1,6 @@
 var SIMUL = (function (interf) {
 
-	interf.SimulationConstructor = function(boids, lineSegs){
+	interf.Simulation = function(boids, lineSegs){
 		var that = {};
 		that.boids = boids;
 		that.lineSegs = lineSegs;
@@ -12,7 +12,6 @@ var SIMUL = (function (interf) {
 				boid.update(dt, BWI);
 			});
 		}
-
 
 		return that;
 	}

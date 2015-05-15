@@ -5,7 +5,10 @@ var TACTIC = (function(interf){
 
 		var that = {};
 		var pbGroups = TACTIC.PriorityBehaviorGroups([  
-		[ {behavior: BEHAVIOR.Wander(50, 60), weight: 1} ]	
+		[ 
+	    	{behavior: BEHAVIOR.Wander(15, 70), weight: 0.5},
+			{behavior: BEHAVIOR.WallAvoid(20,40), weight:40}
+		]
 		]);
 
 		that.getNextStep = function(boid, BWI){

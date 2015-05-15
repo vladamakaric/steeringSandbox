@@ -1,6 +1,6 @@
 var SIMUL = (function (interf) {
-
 	interf.Boid = function(state, properties, tacticStack){
+
 		var that = {};
 		that.state = state;
 		that.properties = properties;
@@ -20,7 +20,7 @@ var SIMUL = (function (interf) {
 		that.update = function(dt, BWI){
 			var force = $V([0,0]);
 			var currentTactic = tacticStack.last();
-			var nextStep = tacticStack.last().getNextStep(that, BWI);
+			var nextStep = currentTactic.getNextStep(that, BWI);
 
 			while( nextStep.status != TACTIC.IN_PROGRESS ){
 
@@ -31,7 +31,7 @@ var SIMUL = (function (interf) {
 				nextStep = currentTactic.getNextStep(that, BWI);
 			}
 
-			force = nextStep.force;
+			force = nextStep.force.truncate(properties.maxForce);
 
 			var acc = force.x(properties.invMass);
 			var vel = state.velocity;

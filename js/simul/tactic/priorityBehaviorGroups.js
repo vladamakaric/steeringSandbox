@@ -13,9 +13,8 @@ var TACTIC = (function(interf){
 			behaviorGroups.some(function(behaviorGroup){
 
 				behaviorGroup.forEach(function(bd){
-					var steeringForce = bd.behavior.getSteeringForce(boid, BWI );
+					var steeringForce = bd.behavior.getSteeringForce(boid, BWI);
 					force = force.add(steeringForce.x(bd.weight));
-
 				});
 
 				if(force.length()!=0)

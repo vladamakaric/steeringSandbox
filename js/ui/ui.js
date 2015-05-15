@@ -92,6 +92,20 @@ var UI = (function (interf) {
 		}
 
 		function mapChanged(mapName){
+
+			function addMapBoundaries(){
+				var cw = canvas.width;
+				var ch = canvas.height;
+				var tl = $V([0,0]);
+				var tr = $V([cw,0]);
+				var br = $V([cw,ch]);
+				var bl = $V([0,ch]);
+				
+				lss.push($LS(tl, tr), $LS(tl, bl), $LS(tr, br), $LS(bl, br));
+			}
+
+
+
 			currentMap = maps[mapName];
 			lss = currentMap.getPolygonLineSegments();
 			clss = currentMap.getConnectedLineSegments();
@@ -116,8 +130,8 @@ var UI = (function (interf) {
 											   ]);
 
 			var boids = [boid];
-
-			simulation = SIMUL.SimulationConstructor(boids, lss);
+			addMapBoundaries();
+			simulation = SIMUL.Simulation(boids, lss);
 		}
 
 		function populateMapDropDown(mapNames){
@@ -135,8 +149,6 @@ var UI = (function (interf) {
 				var mapNum = mapnames.length;
 
 				mapnames.forEach(function(mapname){
-
-
 					$.getJSON( "res/" + mapname + ".json", function(mapjson){
 
 						mapNum--;
