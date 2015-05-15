@@ -1,7 +1,24 @@
 var SIMUL = (function (interf) {
 
-	interf.BoidWorldInfo = function(boid, simulation){
+	interf.BoidWorldInfo = function(boid, simulation, POVRadius){
 		var that = {};
+
+
+		that.neighborBoids = getNeighborNodes();
+
+		function getNeighborNodes(){
+
+			var neighbors = simulation.boids.filter(function(pNeighbor){ 
+				//TODO:
+				return boid.state.pos.distanceFrom
+
+
+			});
+
+
+
+
+		}
 
 
 		that.getDistanceToObstacle = function(V, obstacleInfo){

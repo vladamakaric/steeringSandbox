@@ -44,27 +44,18 @@ var UI = (function (interf) {
 
 
 		canvasPointerEvents.ptrDown = function(pos){
-
 			var V = $V([pos.x,pos.y]);
-
 			var boid =simulation.boids[0];
 			
-				// boid.state.position = V;
-				// return;
+			boid.state.position = V;
+			return;
 
-
-
-			// boid.state.velocity.setElements([0.001,0.001]);
 			var newPath = currentMap.getShortestPath(V, boid.state.position );
 
 			if(newPath){
 				boidPath = newPath;
 				boid.tacticStack[0].changePath(newPath);
-				// boid.behaviors[0] = {behavior: BEHAVIOR.PathFollowConstructor(boidPath, 10, 40), weight: 1};
 			}
-
-
-			// console.log(V.e(1));
 		}
 
 		canvasPointerEvents.ptrMove = function(pos){
@@ -114,8 +105,19 @@ var UI = (function (interf) {
 
 			boidPath =currentMap.getShortestPath(endPoint, boidPos); 
 
-			var boid = SIMUL.Boid({position: boidPos,
-											  velocity: $V([0,1]),
+			var boids = [createBoid( $V([50,50])) , createBoid($V([50,100])), createBoid($V([100,50])), 
+				createBoid($V([50,200])),
+				createBoid($V([50,300])),
+				createBoid($V([50,400]))
+				];
+			addMapBoundaries();
+			simulation = SIMUL.Simulation(boids, lss);
+		}
+
+
+		function createBoid(pos){
+			var boid = SIMUL.Boid({position: pos,
+											  velocity: $V([Math.random(),Math.random()]),
 											  orientation: 0}, 
 											  {invMass: 1,
 											   maxForce: 0.08,
@@ -123,15 +125,8 @@ var UI = (function (interf) {
 											   radius: 10},
 											 [ 
 											 	TACTIC.GoToDestinationInFlock(boidPath)
-											 // {behavior: BEHAVIOR.PathFollowConstructor(boidPath, 20, 60), weight: 1},
-											 // {behavior: BEHAVIOR.Wander(50, 60), weight: 1},
-											 // {behavior: BEHAVIOR.WallAvoid(20,40), weight:40}
-											 // {behavior: BEHAVIOR.WallAvoidConstructor(BEHAVIOR.FrontLateralProngsGenerator(50,24)), weight: 1.7}
 											   ]);
-
-			var boids = [boid];
-			addMapBoundaries();
-			simulation = SIMUL.Simulation(boids, lss);
+			return boid;
 		}
 
 		function populateMapDropDown(mapNames){

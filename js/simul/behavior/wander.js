@@ -36,8 +36,8 @@ var BEHAVIOR = (function(interf){
 			var rand = $V([Math.cos(angle + orientation), Math.sin(angle + orientation)]).x(r);
 			var seekTarget = pos.add(future.add(rand));
 
-			DRAW.circleOutline(DRAW.c, pos.add(future), r);
-			DRAW.line(DRAW.c, pos, seekTarget);
+			// DRAW.circleOutline(DRAW.c, pos.add(future), r);
+			// DRAW.line(DRAW.c, pos, seekTarget);
 
 			return STEERING.seek(boid, seekTarget, 0);
 		}

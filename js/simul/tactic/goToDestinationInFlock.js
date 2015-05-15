@@ -14,8 +14,8 @@ var TACTIC = (function(interf){
 		],
 		[ 
 
-			{behavior: BEHAVIOR.PathFollow(path, 20, 60), weight: 1}
-			// {behavior: BEHAVIOR.Wander(15, 70), weight: 0.5}
+			// {behavior: BEHAVIOR.PathFollow(path, 20, 60), weight: 1}
+			{behavior: BEHAVIOR.Wander(15, 70), weight: 0.5}
 		]
 		]);
 

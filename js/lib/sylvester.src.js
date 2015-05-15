@@ -1292,6 +1292,10 @@ Vector.prototype.getCWPerp2D = function(){
 	return $V([this.e(2),-this.e(1)]);
 }
 
+Vector.prototype.distanceSqFrom = function(vector){
+	return this.subtract(vector).lengthSq();
+}
+
 Vector.prototype.distanceFrom = function(vector){
 	return this.subtract(vector).length();
 }
