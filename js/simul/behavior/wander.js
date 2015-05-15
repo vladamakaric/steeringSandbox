@@ -20,11 +20,11 @@ var BEHAVIOR = (function(interf){
 
 			 if(Math.random()>0.7){
 
-				 var delta =Math.sign(2*Math.random()-1)*0.2; 
+				 var delta =Math.sign(2*Math.random()-1)*0.1; 
 
 				angle = normalizeAngle(angle); 
 
-				if(Math.abs(angle)>Math.PI/4)
+				if(Math.abs(angle)>Math.PI/6 || Math.random()>0.85)
 					delta = Math.abs(delta)*-1*Math.sign(angle);
 
 				angle+=delta;
@@ -36,8 +36,8 @@ var BEHAVIOR = (function(interf){
 			var rand = $V([Math.cos(angle + orientation), Math.sin(angle + orientation)]).x(r);
 			var seekTarget = pos.add(future.add(rand));
 
-			// DRAW.circleOutline(DRAW.c, pos.add(future), r);
-			// DRAW.line(DRAW.c, pos, seekTarget);
+			DRAW.circleOutline(DRAW.c, pos.add(future), r);
+			DRAW.line(DRAW.c, pos, seekTarget);
 
 			return STEERING.seek(boid, seekTarget, 0);
 		}
