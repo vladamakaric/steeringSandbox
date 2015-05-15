@@ -49,8 +49,8 @@ var UI = (function (interf) {
 
 			var boid =simulation.boids[0];
 			
-				boid.state.position = V;
-				return;
+				// boid.state.position = V;
+				// return;
 
 
 
@@ -58,9 +58,9 @@ var UI = (function (interf) {
 			var newPath = currentMap.getShortestPath(V, boid.state.position );
 
 			if(newPath){
-
 				boidPath = newPath;
-				boid.behaviors[0] = {behavior: BEHAVIOR.PathFollowConstructor(boidPath, 10, 40), weight: 1};
+				boid.tacticStack[0].changePath(newPath);
+				// boid.behaviors[0] = {behavior: BEHAVIOR.PathFollowConstructor(boidPath, 10, 40), weight: 1};
 			}
 
 
@@ -122,7 +122,7 @@ var UI = (function (interf) {
 											   maxSpeed: 1.7,
 											   radius: 10},
 											 [ 
-											 	TACTIC.GoToDestinationInFlock()
+											 	TACTIC.GoToDestinationInFlock(boidPath)
 											 // {behavior: BEHAVIOR.PathFollowConstructor(boidPath, 20, 60), weight: 1},
 											 // {behavior: BEHAVIOR.Wander(50, 60), weight: 1},
 											 // {behavior: BEHAVIOR.WallAvoid(20,40), weight:40}

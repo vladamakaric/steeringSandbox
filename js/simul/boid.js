@@ -4,6 +4,7 @@ var SIMUL = (function (interf) {
 		var that = {};
 		that.state = state;
 		that.properties = properties;
+		that.tacticStack = tacticStack;
 
 		that.pushTacticOnStack = function(tactic){
 			tacticStack.push(tactic);

@@ -6,6 +6,7 @@ var TACTIC = (function(interf){
 	interf.PriorityBehaviorGroups = function( behaviorGroups){
 		var that = {};
 
+		that.behaviorGroups = behaviorGroups;
 		that.getForce = function(boid, BWI){
 
 			var force = $V([0,0]);

@@ -1,9 +1,9 @@
 var BEHAVIOR = (function(interf){
 
-	interf.PathFollowConstructor = function(path, capsuleR, prongL){
+	interf.PathFollow= function(path, capsuleR, prongL){
 		var that = {};
 
-		that.getSteeringForce = function(boid, worldInfo){
+		that.getSteeringForce = function(boid, BWI){
 			var pos = boid.state.position;
 			var vel = boid.state.velocity;
 			var cindx = PATH.getClosestLSIndx(pos, path);
@@ -12,53 +12,21 @@ var BEHAVIOR = (function(interf){
 
 			// if(locOnCLS == path[0])
 			// 	return STEERING.seek(boid, path[0], 0); 
-
-			var cpDesc = worldInfo.cpDesc;
-
 			var projOnPath = {pos: locOnCLS, lsIndx: cindx};
-			var curSpeed = boid.state.velocity.length()+1;
+
 			var velScale = vel.length()/boid.properties.maxSpeed;
 
 			var target = PATH.advancePathLocation(path, projOnPath, prongL*velScale);
 
-			var projToTarget = target.pos.subtract(projOnPath.pos);
-
-			var distToCP = cpDesc.closestPoint.subtract(pos).length();
-			var r = 25;
 
 			var future = pos.add(vel.scale(prongL));
 
-
 			var futureInCapsule = PATH.getDistance(future, path) < capsuleR; 
 
-			if(false && distToCP<r){
-
-				var scale = distToCP/r;
-				scale*=scale*scale*scale*scale*scale;
-				var newTarget = PATH.advancePathLocation(path, projOnPath, prongL*velScale*scale);
-
-
-				var goal = newTarget.pos;
-
-				var targetToFuture = future.subtract(goal);
-
-
-				//interpolacija izmedju trenutnog smera i ogranicenja na putanju
-				//ukoliko blizina boid-a nije prevelika, ako je prevelika mora se
-				//ostro skrenuti ka putanju, bez interpolacije
-				if(scale>0.8 && futureInCapsule)
-				goal = goal.add(targetToFuture.x(scale));
-
-				DRAW.point(DRAW.c, goal);
-
-
-				return STEERING.seek(boid, goal, arriveR);
-			}
-
-
-
-			var targetIsGoal = target.pos.subtract(path[path.length-1]).length()<0.3;
+			var targetIsGoal = target.pos.subtract(path.last()).length()<0.3;
 		
+			var projToTarget = target.pos.subtract(projOnPath.pos);
+
 			if(futureInCapsule && vel.dot(projToTarget) > 0 && !targetIsGoal)
 				return STEERING.seek(boid, future, 0); 
 			
