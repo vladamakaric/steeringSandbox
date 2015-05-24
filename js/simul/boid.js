@@ -10,8 +10,6 @@ var SIMUL = (function (interf) {
 			tacticStack.push(tactic);
 		}
 
-
-
 		that.isObstacleCollisionImminent = function(BWI){
 			var pos = state.position;
 			var vel = state.velocity;

@@ -8,6 +8,18 @@ var BEHAVIOR = (function(interf){
 
 		that.getSteeringForce = function(boid, BWI){
 
+			function getNeighborsInFrustum(angle){
+
+				function neighborInFrustum(neighbor){
+					var dir = Vector.getUnitFromAngle(boid.state.orientation);
+					var toNeighbor= neighbor.state.position.subtract(boid.state.position); 
+					return dir.angleFrom(toNeighbor) < angle;
+				}
+
+				return BWI.neighborBoids.filter(function(nb){
+					return neighborInFrustum(nb); 
+				});
+			}
 			var pos = boid.state.position;
 			var vel = boid.state.velocity;
 			var orient = boid.state.orientation;
@@ -15,21 +27,26 @@ var BEHAVIOR = (function(interf){
 			var fovHalfAngle = boid.properties.FOVAngle/2;
 			var averagePos = $V([0,0]);
 			var dir = Vector.getUnitFromAngle(boid.state.orientation);
-
 			DRAW.c.beginPath();
-			DRAW.c.moveTo(pos.e(1) ,pos.e(2));
+
+			DRAW.c.moveTo(centerX, centerY);
 			DRAW.c.arc(pos.e(1) ,pos.e(2), boid.properties.FOVRadius, orient - fovHalfAngle, orient + fovHalfAngle);
 			DRAW.c.closePath();
 			DRAW.c.stroke();
+	 // context.fillStyle = 'red';
+     //  context.fill();
+     //  context.strokeStyle = '#550000';
+     //  context.stroke();
+			var visibleNeighbors = getNeighborsInFrustum(fovHalfAngle);
 
-			if(!BWI.visibleNeighbors.length)
+			if(!visibleNeighbors.length)
 				return $V([0,0]);
-
-			BWI.visibleNeighbors.forEach(function(nb){
+			visibleNeighbors.forEach(function(nb){
 				averagePos = averagePos.add(nb.state.position);
 			});
 
-			averagePos = averagePos.x(1/BWI.visibleNeighbors.length);
+
+			averagePos = averagePos.x(1/visibleNeighbors.length);
 
 			var c = DRAW.c.strokeStyle;
 			DRAW.c.strokeStyle = 'blue';		

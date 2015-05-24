@@ -3,9 +3,9 @@ var SIMUL = (function (interf) {
 	interf.BoidWorldInfo = function(boid, simulation, POVRadius){
 		var that = {};
 
-		that.neighborBoids = getNeighborNodes();
+		that.neighborBoids = getNeighborBoids();
 
-		function getNeighborNodes(){
+		function getNeighborBoids(){
 
 			var neighbors = simulation.boids.filter(function(pNeighbor){ 
 
@@ -16,6 +16,21 @@ var SIMUL = (function (interf) {
 			});
 
 			return neighbors;
+		}
+
+		that.visibleNeighbors = getNeighborsInFOV();
+
+		function getNeighborsInFOV(){
+
+			function neighborInFOV(neighbor){
+				var dir = Vector.getUnitFromAngle(boid.state.orientation);
+				var toNeighbor= neighbor.state.position.subtract(boid.state.position); 
+				return dir.angleFrom(toNeighbor) < boid.properties.FOVAngle/2;
+			}
+
+			return that.neighborBoids.filter(function(nb){
+				return neighborInFOV(nb); 
+			});
 		}
 
 		that.getDistanceToObstacle = function(V, obstacleInfo){

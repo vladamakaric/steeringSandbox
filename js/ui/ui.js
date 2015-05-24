@@ -122,7 +122,9 @@ var UI = (function (interf) {
 											  {invMass: 1,
 											   maxForce: 0.08,
 											   maxSpeed: 1.7,
-											   radius: 10},
+											   radius: 10,
+											  FOVRadius: 100,
+											  FOVAngle: Math.PI/1.3},
 											 [ 
 											 	TACTIC.GoToDestinationInFlock(boidPath, groupBehavior)
 											   ]);
