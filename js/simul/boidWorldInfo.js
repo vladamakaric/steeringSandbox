@@ -3,23 +3,20 @@ var SIMUL = (function (interf) {
 	interf.BoidWorldInfo = function(boid, simulation, POVRadius){
 		var that = {};
 
-
 		that.neighborBoids = getNeighborNodes();
 
 		function getNeighborNodes(){
 
 			var neighbors = simulation.boids.filter(function(pNeighbor){ 
-				//TODO:
-				return boid.state.pos.distanceFrom
 
+				if(pNeighbor == boid)
+					return false;
 
+				return boid.state.position.distanceFrom(pNeighbor.state.position)<POVRadius;
 			});
 
-
-
-
+			return neighbors;
 		}
-
 
 		that.getDistanceToObstacle = function(V, obstacleInfo){
 			var dists = obstacleInfo.lineSegments.map(function(ls){ return ls.distanceFrom(V); });

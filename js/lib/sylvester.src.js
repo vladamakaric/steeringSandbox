@@ -1348,6 +1348,7 @@ LineSegment.prototype = {
 		
 		return (dA > dB) ? this.B : this.A;
 	},
+	 
 
 	getNormal: function(){
 		return this.getDir().getCWPerp2D();
@@ -1400,6 +1401,11 @@ LineSegment.prototype = {
 
 		return Math.min(dA, dB);
 	}
+};
+
+Vector.getUnitFromAngle= function(angle){
+	return $V([Math.cos(angle),Math.sin(angle)]);
+
 };
 
 LineSegment.create = function(A, B) {

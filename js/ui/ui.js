@@ -105,7 +105,7 @@ var UI = (function (interf) {
 
 			boidPath =currentMap.getShortestPath(endPoint, boidPos); 
 
-			var boids = [createBoid( $V([50,50])) , createBoid($V([50,100])), createBoid($V([100,50])), 
+			var boids = [createBoid( $V([50,50]), true) , createBoid($V([50,100])), createBoid($V([100,50])), 
 				createBoid($V([50,200])),
 				createBoid($V([50,300])),
 				createBoid($V([50,400]))
@@ -115,7 +115,7 @@ var UI = (function (interf) {
 		}
 
 
-		function createBoid(pos){
+		function createBoid(pos, groupBehavior){
 			var boid = SIMUL.Boid({position: pos,
 											  velocity: $V([Math.random(),Math.random()]),
 											  orientation: 0}, 
@@ -124,7 +124,7 @@ var UI = (function (interf) {
 											   maxSpeed: 1.7,
 											   radius: 10},
 											 [ 
-											 	TACTIC.GoToDestinationInFlock(boidPath)
+											 	TACTIC.GoToDestinationInFlock(boidPath, groupBehavior)
 											   ]);
 			return boid;
 		}
