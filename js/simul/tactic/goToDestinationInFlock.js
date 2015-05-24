@@ -13,16 +13,19 @@ var TACTIC = (function(interf){
 			{behavior: BEHAVIOR.WallAvoid(20,40), weight:40}
 		],
 		[ 
-
-			// {behavior: BEHAVIOR.PathFollow(path, 20, 60), weight: 1}
-			{behavior: BEHAVIOR.Wander(15, 70), weight: 0.5}
+//
+			 {behavior: BEHAVIOR.PathFollow(path, 20, 60), weight: 1}
+			// {behavior: BEHAVIOR.Wander(15, 70), weight: 0.5}
 		]
 		];
 
-		if(groupBehavior)
+		// if(groupBehavior)
 		{
-			alert('smor');
-			bgrps.splice(1, 0, [{behavior: BEHAVIOR.Cohesion(50), weight:40}]);
+			bgrps.splice(1, 0, [
+					{behavior: BEHAVIOR.Cohesion(), weight:0.6},
+					{behavior: BEHAVIOR.Align(), weight:0.2},
+					{behavior: BEHAVIOR.Separation(), weight: 0.05}
+					]);
 		}
 
 		var pbGroups = TACTIC.PriorityBehaviorGroups(bgrps);

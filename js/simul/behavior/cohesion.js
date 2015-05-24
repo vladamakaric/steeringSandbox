@@ -29,14 +29,15 @@ var BEHAVIOR = (function(interf){
 				averagePos = averagePos.add(nb.state.position);
 			});
 
-			averagePos = averagePos.x(1/BWI.visibleNeighbors.length);
+			// averagePos = averagePos.add(pos);
+			averagePos = averagePos.x(1/(BWI.visibleNeighbors.length+0));
 
 			var c = DRAW.c.strokeStyle;
 			DRAW.c.strokeStyle = 'blue';		
 			DRAW.circleOutline(DRAW.c, averagePos, 10);
 			DRAW.fillStyle = c;
 
-			return STEERING.seek(boid, averagePos, 0);
+			return STEERING.seek(boid, averagePos, 40);
 		}
 
 		return that;
