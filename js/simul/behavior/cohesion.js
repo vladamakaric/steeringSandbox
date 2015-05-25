@@ -37,7 +37,7 @@ var BEHAVIOR = (function(interf){
 			DRAW.circleOutline(DRAW.c, averagePos, 10);
 			DRAW.fillStyle = c;
 
-			return STEERING.seek(boid, averagePos, 40);
+			return STEERING.seek(boid, averagePos, 25, vel.length()/boid.properties.maxSpeed);
 		}
 
 		return that;

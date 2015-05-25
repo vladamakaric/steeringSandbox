@@ -5,11 +5,27 @@ var UI = (function (interf) {
 		var maps = {};
 
 		var currentMap;
+		var action = "add";
+        //
+		// var velAx = params.velA.x;
+		// var velAy = params.velA.y;
+		// var velBx = params.velB.x;
+		// var velBy = params.velB.y;
+		// var posAx = params.posA.x;
+		// var posAy = params.posA.y;
+		// var posBx = params.posB.x;
+		// var posBy = params.posB.y;
+		// var ra = params.ra;
+		// var rb = params.rb;
+
+		var t0 = VECTOR_UTIL.getTimeUntilConstantVelocityMovingBallsCollision({ velA: {x: 5, y: 0}, velB: { x: -4, y: 0}, posA: {x:0, y:0}, posB: {x:100, y: 0}, ra: 40, rb: 10});
+		alert(t0);
 
 		$('select').on('change', function() {
 			mapChanged(this.value);
 		});	
 
+		$("input[name='oncl']").change(clickBehaviorChanged);
 		that.update = function(){};
 
 	
@@ -19,6 +35,9 @@ var UI = (function (interf) {
 		var lss = null;
 		var simulation = null;	
 
+		function clickBehaviorChanged(){
+			action= $(this).val();
+		}
 
 		loadMaps("res/maps.json", function(mapNames, loadedMaps){ 
 			maps = loadedMaps;
@@ -47,14 +66,23 @@ var UI = (function (interf) {
 			var V = $V([pos.x,pos.y]);
 			var boid =simulation.boids[0];
 			
-			boid.state.position = V;
-			return;
+			if(action == "add"){
+				var newBoid = createBoid(V);
+				simulation.boids.push(newBoid);
 
-			var newPath = currentMap.getShortestPath(V, boid.state.position );
+				return;
+			}
+			
+			if(action == "path"){
+				var newPath = currentMap.getShortestPath(V, boid.state.position );
 
-			if(newPath){
-				boidPath = newPath;
-				boid.tacticStack[0].changePath(newPath);
+				if(newPath){
+					boidPath = newPath;
+					simulation.boids.forEach(function(bd){
+						bd.tacticStack[0].changePath(newPath);
+						bd.state.velocity = V.subtract(bd.state.position).truncate(bd.properties.maxSpeed);
+					});
+				}
 			}
 		}
 
@@ -105,13 +133,13 @@ var UI = (function (interf) {
 
 			boidPath =currentMap.getShortestPath(endPoint, boidPos); 
 
-			var boids = [createBoid( $V([50,50]), true) , createBoid($V([50,100])), createBoid($V([100,50])), 
-				createBoid($V([50,200])),
-				createBoid($V([50,300])),
-				createBoid($V([50,400]))
-				];
+			// var boids = [createBoid( $V([50,50]), true) , createBoid($V([50,100])), createBoid($V([100,50])), 
+			// 	createBoid($V([50,200])),
+			// 	createBoid($V([50,300])),
+			// 	createBoid($V([50,400]))
+			// 	];
 			addMapBoundaries();
-			simulation = SIMUL.Simulation(boids, lss);
+			simulation = SIMUL.Simulation([], lss);
 		}
 
 
@@ -124,7 +152,7 @@ var UI = (function (interf) {
 											   maxSpeed: 1.7,
 											   radius: 10,
 											  FOVRadius: 100,
-											  FOVAngle: Math.PI*0.7},
+											  FOVAngle: Math.PI*0.9},
 											 [ 
 											 	TACTIC.GoToDestinationInFlock(boidPath, groupBehavior)
 											   ]);

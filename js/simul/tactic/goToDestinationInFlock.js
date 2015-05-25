@@ -22,16 +22,17 @@ var TACTIC = (function(interf){
 		// if(groupBehavior)
 		{
 			bgrps.splice(1, 0, [
-					{behavior: BEHAVIOR.Cohesion(), weight:0.6},
-					{behavior: BEHAVIOR.Align(), weight:0.2},
-					{behavior: BEHAVIOR.Separation(), weight: 0.05}
+					{behavior: BEHAVIOR.Cohesion(), weight:0.5},
+					{behavior: BEHAVIOR.Align(), weight:0.4},
+					{behavior: BEHAVIOR.Separation(), weight: 0.03}
 					]);
 		}
 
 		var pbGroups = TACTIC.PriorityBehaviorGroups(bgrps);
 
 		that.changePath = function(newPath){
-			pbGroups.behaviorGroups[1][0].behavior = BEHAVIOR.PathFollow(newPath, 20, 60);
+			pbGroups.behaviorGroups[2][0].behavior = BEHAVIOR.PathFollow(newPath, 20, 60);
+
 		}
 
 		that.getNextStep = function(boid, BWI){
