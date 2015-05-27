@@ -39,7 +39,7 @@ var SIMUL = (function (interf) {
 			var collisions = candidates.reduce(function(memo, nb) {
 				var time = getBoidsTimeOfCollision(boid, nb);
 
-				if (time > -1)
+				if (time != null && time > 0)
 					memo.push({ time: time, boid: nb});
 
 				return memo;
@@ -62,7 +62,6 @@ var SIMUL = (function (interf) {
 				return dir.angleFrom(toNeighbor) < angle/2;
 			}
 
-			console.log(that.neighborBoids.length);
 			return that.neighborBoids.filter(function(nb){
 				return neighborInFOV(nb); 
 			});

@@ -1260,7 +1260,7 @@ Plane.YX = Plane.XY; Plane.ZY = Plane.YZ; Plane.XZ = Plane.ZX;
 
 // Utility functions
 var $V = Vector.create;
-var $M = Matrix.create;
+	var $M = Matrix.create;
 var $L = Line.create;
 var $P = Plane.create;
 

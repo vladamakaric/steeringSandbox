@@ -44,7 +44,7 @@ var VECTOR_UTIL = (function(interf){
 		var D = b*b - 4*a*c;
 
 		if(D < 0)
-			return -1;
+			return null;
 		
 		var t1 = (-b + Math.sqrt(D))/(2*a);
 		var t2 = (-b - Math.sqrt(D))/(2*a);
