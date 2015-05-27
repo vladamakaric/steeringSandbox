@@ -1288,6 +1288,10 @@ Vector.prototype.truncate = function(maxLen){
 	return this;
 }
 
+Vector.prototype.isCWFrom = function(vector){
+	return this.cross2D(vector) > 0;
+}
+
 Vector.prototype.getCWPerp2D = function(){
 	return $V([this.e(2),-this.e(1)]);
 }

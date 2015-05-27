@@ -19,7 +19,6 @@ var UI = (function (interf) {
 		// var rb = params.rb;
 
 		var t0 = VECTOR_UTIL.getTimeUntilConstantVelocityMovingBallsCollision({ velA: {x: 5, y: 0}, velB: { x: -4, y: 0}, posA: {x:0, y:0}, posB: {x:100, y: 0}, ra: 40, rb: 10});
-		alert(t0);
 
 		$('select').on('change', function() {
 			mapChanged(this.value);

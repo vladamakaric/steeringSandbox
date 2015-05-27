@@ -18,8 +18,8 @@ var VECTOR_UTIL = (function(interf){
 		var rvy = velBy - velAy;
 
 		//radiuses of balls
-		var ra = params.ra;
-		var rb = params.rb;
+		var ra = params.rA;
+		var rb = params.rB;
 
 
 		//balls moving apart

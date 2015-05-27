@@ -8,7 +8,7 @@ var SIMUL = (function (interf) {
 		that.update = function(dt){
 
 			boids.forEach(function(boid){
-				var BWI = SIMUL.BoidWorldInfo(boid, that, boid.properties.FOVRadius);
+				var BWI = SIMUL.BoidWorldInfo(boid, that);
 				boid.update(dt, BWI);
 			});
 		}

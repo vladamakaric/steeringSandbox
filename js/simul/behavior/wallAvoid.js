@@ -48,7 +48,6 @@ var BEHAVIOR = (function(interf){
 				targetPos = COP.add(tangentFollowDisplacement.x(-1.4)).add(toBoid.scale(distFromObstacle));
 			}
 			
-			DRAW.point(DRAW.c, targetPos);
 			return STEERING.seek(boid, targetPos, 0);
 		}
 

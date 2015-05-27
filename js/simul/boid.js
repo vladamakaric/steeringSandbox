@@ -18,6 +18,7 @@ var SIMUL = (function (interf) {
 			return !BWI.isPathClear($LS(pos, pos.add(future)));
 		}
 
+
 		that.update = function(dt, BWI){
 			var force = $V([0,0]);
 			var currentTactic = tacticStack.last();

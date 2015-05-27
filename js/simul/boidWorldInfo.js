@@ -12,22 +12,57 @@ var SIMUL = (function (interf) {
 				if(pNeighbor == boid)
 					return false;
 
-				return boid.state.position.distanceFrom(pNeighbor.state.position)<POVRadius;
+				return boid.state.position.distanceFrom(pNeighbor.state.position)<boid.properties.FOVRadius;
 			});
 
 			return neighbors;
 		}
 
-		that.visibleNeighbors = getNeighborsInFOV();
+		function getBoidsTimeOfCollision(boidA, boidB){
+			return VECTOR_UTIL.getTimeUntilConstantVelocityMovingBallsCollision({
+				velA: {x: boidA.state.velocity.e(1), y: boidA.state.velocity.e(2)},
+				velB: {x: boidB.state.velocity.e(1), y: boidB.state.velocity.e(2)},
+				posB: {x: boidB.state.position.e(1), y: boidB.state.position.e(2)},
+				posA: {x: boidA.state.position.e(1), y: boidA.state.position.e(2)},
+				rA: boidA.properties.radius,
+				rB: boidB.properties.radius
+			});
+		}
 
-		function getNeighborsInFOV(){
+
+
+		that.getFirstCollisionInFOV = function(angle){
+
+			var candidates = that.getNeighborsInFOV(angle);
+
+
+			var collisions = candidates.reduce(function(memo, nb) {
+				var time = getBoidsTimeOfCollision(boid, nb);
+
+				if (time > -1)
+					memo.push({ time: time, boid: nb});
+
+				return memo;
+			}, []);
+
+
+			if(collisions.length==0)
+				return null;
+
+			var firstCollision = _.min(collisions, function(col){ return col.time; });
+
+			return firstCollision;
+		}
+
+		that.getNeighborsInFOV = function(angle){
 
 			function neighborInFOV(neighbor){
 				var dir = Vector.getUnitFromAngle(boid.state.orientation);
 				var toNeighbor= neighbor.state.position.subtract(boid.state.position); 
-				return dir.angleFrom(toNeighbor) < boid.properties.FOVAngle/2;
+				return dir.angleFrom(toNeighbor) < angle/2;
 			}
 
+			console.log(that.neighborBoids.length);
 			return that.neighborBoids.filter(function(nb){
 				return neighborInFOV(nb); 
 			});

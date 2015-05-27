@@ -10,23 +10,26 @@ var TACTIC = (function(interf){
 		var bgrps = [
 
 		[
+			{behavior: BEHAVIOR.CollisionAvoidance(15, 70), weight: 0.5},
+		],
+		[
 			{behavior: BEHAVIOR.WallAvoid(20,40), weight:40}
 		],
 		[ 
 //
-			 {behavior: BEHAVIOR.PathFollow(path, 20, 60), weight: 1}
-			// {behavior: BEHAVIOR.Wander(15, 70), weight: 0.5}
+			 // {behavior: BEHAVIOR.PathFollow(path, 20, 60), weight: 1}
+			{behavior: BEHAVIOR.Wander(15, 70), weight: 0.5}
 		]
 		];
 
 		// if(groupBehavior)
-		{
-			bgrps.splice(1, 0, [
-					{behavior: BEHAVIOR.Cohesion(), weight:0.5},
-					{behavior: BEHAVIOR.Align(), weight:0.4},
-					{behavior: BEHAVIOR.Separation(), weight: 0.03}
-					]);
-		}
+		// {
+		// 	bgrps.splice(1, 0, [
+		// 			{behavior: BEHAVIOR.Cohesion(), weight:0.5},
+		// 			{behavior: BEHAVIOR.Align(), weight:0.4},
+		// 			{behavior: BEHAVIOR.Separation(), weight: 0.03}
+		// 			]);
+		// }
 
 		var pbGroups = TACTIC.PriorityBehaviorGroups(bgrps);
 
