@@ -45,7 +45,12 @@ var BEHAVIOR = (function(interf){
 			
 			if(collision = BWI.getFirstCollisionInFOV(Math.PI*2))
 			{
-				boid.properties.maxForce = 0.3;
+
+
+				if(collision.time>35)
+					return $V([0,0]);
+
+				boid.properties.maxForce = 0.1;
 
 				var otherBoid = collision.boid;
 				var obPos = otherBoid.state.position;
@@ -59,16 +64,6 @@ var BEHAVIOR = (function(interf){
 
 				var cross = vel.cross2D(obVel);
 
-				console.log(collision.time);
-
-
-				if(collision.time < 2)
-				{
-					var fromOther = pos.subtract(obPos);
-					boid.state.velocity = $V([0,0]);
-					force = fromOther.scale(10);
-				}
-				else
 				if(vel.dot(obVel)<0){
 
 					var probe2 = $LS(pos, pos.add(vel.scale(boid.properties.radius*4)));
@@ -76,11 +71,10 @@ var BEHAVIOR = (function(interf){
 					var toOther = obPos.subtract(pos);
 					force = vel.getCWPerp2D();
 
-					DRAW.c.fillStyle = 'red';
-					DRAW.point(DRAW.c, probe.B );
-					DRAW.lineSegments(DRAW.c, [probe, probe2]);
+					// DRAW.c.fillStyle = 'red';
+					// DRAW.point(DRAW.c, probe.B );
+					// DRAW.lineSegments(DRAW.c, [probe, probe2]);
 
-					
 					//TODO proveriti dali komsija moze da skrene desno, ako nemoze treba skrenuti levo
 					if(!isRightClear(boid, boid.properties.radius*4)){
 
@@ -91,11 +85,9 @@ var BEHAVIOR = (function(interf){
 						}else
 							force = vel.x(-1);
 
-
 						if(!isRightClear(otherBoid, r*4)){
 							force = vel.scale(-10);
 						}
-
 					}
 
 				}else
@@ -109,34 +101,11 @@ var BEHAVIOR = (function(interf){
 					if(boid.precedence > otherBoid.precedence){
 						force = vel.x(-1);
 
-						DRAW.c.fillStyle = 'green';
-						
-						DRAW.point(DRAW.c, pos.add(vel.scale(20)) );
+						// DRAW.c.fillStyle = 'green';
+						//
+						// DRAW.point(DRAW.c, pos.add(vel.scale(20)) );
 					}
-					
-                    //
-                    //
-					// var dT = pos.distanceFrom(collisionPos);
-					// var dO = otherBoid.state.position.distanceFrom(collisionPos);
-                    //
-					// var feelerCW = $LS( obPos, obPos.add(obVel.getCWPerp2D().scale(otherBoid.properties.radius*4)));
-					// var feelerCCW = $LS( obPos, obPos.add(obVel.getCWPerp2D().scale(-otherBoid.properties.radius*4)));
-                    //
-					// // if(!BWI.isPathClear(feelerCW)){
-                    // //
-					// // }else
-					// // if(!BWI.isPathClear(feelerCCW)){
-                    // //
-					// // }else
-					// if(cross>0)
-					// {
-					// 	force = vel.getCWPerp2D().x(-1);
-                    //
-                    //
-					// 		// alert('smor');
-					// 		force = $V([0,0]);
-					// 	
-					// }
+						// force = vel.getCWPerp2D();
 				}
 
 				return force;

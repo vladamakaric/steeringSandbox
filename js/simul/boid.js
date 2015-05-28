@@ -14,6 +14,10 @@ var SIMUL = (function (interf) {
 			var pos = state.position;
 			var vel = state.velocity;
 
+
+			if(vel.length()< 0.001)
+				return false;
+
 			var future = vel.scale(properties.radius*2);
 			return !BWI.isPathClear($LS(pos, pos.add(future)));
 		}
@@ -28,6 +32,10 @@ var SIMUL = (function (interf) {
 
 				if(nextStep.status == TACTIC.FINISHED)
 					tacticStack.pop();
+				else if(nextStep.status == TACTIC.OVERRIDE){
+
+					tacticStack.splice(tacticStack.length-2,1);
+				}
 
 				currentTactic = tacticStack.last();
 				nextStep = currentTactic.getNextStep(that, BWI);

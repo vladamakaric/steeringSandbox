@@ -4,21 +4,16 @@ var TACTIC = (function(interf){
 	interf.GoToDestinationInFlock = function(path, groupBehavior){
 
 		var that = {};
-
-
-		// var pathFollowBehav = 
 		var bgrps = [
-
 		[
 			{behavior: BEHAVIOR.CollisionAvoidance(15, 70), weight: 0.5},
 		],
 		[
-			{behavior: BEHAVIOR.WallAvoid(20,40), weight:40}
+			 {behavior: BEHAVIOR.WallAvoid(20,40), weight:40}
+			// {behavior: BEHAVIOR.PathFollow(path, 20, 60), weight: 1}
 		],
 		[ 
-//
-			 // {behavior: BEHAVIOR.PathFollow(path, 20, 60), weight: 1}
-			{behavior: BEHAVIOR.Wander(15, 70), weight: 0.5}
+			 {behavior: BEHAVIOR.Wander(15, 70), weight: 0.5}
 		]
 		];
 
@@ -40,16 +35,18 @@ var TACTIC = (function(interf){
 
 		that.getNextStep = function(boid, BWI){
 
-			if(groupBehavior)
-			BWI.neighborBoids.forEach(function(nb){
-				DRAW.circleOutline(DRAW.c, nb.state.position, 40);	
-			});
-
 			if(boid.isObstacleCollisionImminent(BWI)){
 				boid.pushTacticOnStack(TACTIC.CollisionBackOff(boid, BWI));
 				return {status: TACTIC.DELEGATE};
 			}
+			var collision;
 
+			if(collision = BWI.getFirstCollisionInFOV(Math.PI*2)){
+				if(collision.time < 2){
+					boid.pushTacticOnStack(TACTIC.CollisionBackOff2(boid, collision.boid.state.position));
+					return {status: TACTIC.DELEGATE};
+				}
+			}
 			var force = pbGroups.getForce(boid, BWI);
 
 			return {status: TACTIC.IN_PROGRESS, force: force};
