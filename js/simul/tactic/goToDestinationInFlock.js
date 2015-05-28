@@ -9,8 +9,8 @@ var TACTIC = (function(interf){
 			{behavior: BEHAVIOR.CollisionAvoidance(15, 70), weight: 0.5},
 		],
 		[
-			 {behavior: BEHAVIOR.WallAvoid(20,40), weight:40}
-			// {behavior: BEHAVIOR.PathFollow(path, 20, 60), weight: 1}
+			 // {behavior: BEHAVIOR.WallAvoid(20,40), weight:40}
+			{behavior: BEHAVIOR.PathFollow(path, 20, 60), weight: 1}
 		],
 		[ 
 			 {behavior: BEHAVIOR.Wander(15, 70), weight: 0.5}
@@ -43,7 +43,7 @@ var TACTIC = (function(interf){
 
 			if(collision = BWI.getFirstCollisionInFOV(Math.PI*2)){
 				if(collision.time < 2){
-					boid.pushTacticOnStack(TACTIC.CollisionBackOff2(boid, collision.boid.state.position));
+					boid.pushTacticOnStack(TACTIC.CollisionBackOff2(boid, collision.boid.state.position, collision.boid));
 					return {status: TACTIC.DELEGATE};
 				}
 			}

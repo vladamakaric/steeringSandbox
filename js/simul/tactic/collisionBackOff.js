@@ -1,10 +1,10 @@
 var TACTIC = (function(interf){
 
-	interf.CollisionBackOff2 = function(boid, colPoint){
+	interf.CollisionBackOff2 = function(boid, colPoint, colBoid){
 		var that = {};
 		var oldMaxForce = boid.properties.maxForce;
 
-		boid.properties.maxForce = 0.3;
+		boid.properties.maxForce = 0.8;
 
 		var vel = boid.state.velocity;
 		var pos = boid.state.position;
@@ -16,13 +16,16 @@ var TACTIC = (function(interf){
 			vel = boid.state.velocity;
 			pos = boid.state.position;
 
+			var colBPos = colBoid.state.position;
+
 			time++;
 			if(boid.isObstacleCollisionImminent(BWI)){
 				boid.pushTacticOnStack(TACTIC.CollisionBackOff(boid, BWI));
 				return {status: TACTIC.OVERRIDE};
 			}
+			
 
-			if(time==7){
+			if(time==7 || (time>2 &&  colBPos.subtract(pos).length() > boid.properties.radius*2) ){
 				boid.properties.maxForce = oldMaxForce;
 				return {status: TACTIC.FINISHED};
 			}
