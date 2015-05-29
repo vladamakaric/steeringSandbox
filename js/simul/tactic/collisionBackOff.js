@@ -25,7 +25,8 @@ var TACTIC = (function(interf){
 			}
 			
 
-			if(time==7 || (time>2 &&  colBPos.subtract(pos).length() > boid.properties.radius*2) ){
+			if(time==7 || (time>1 &&  colBPos.subtract(pos).length() > boid.properties.radius*2) ){
+				console.log('smor');
 				boid.properties.maxForce = oldMaxForce;
 				return {status: TACTIC.FINISHED};
 			}

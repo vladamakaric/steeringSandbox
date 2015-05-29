@@ -30,7 +30,7 @@ var BEHAVIOR = (function(interf){
 				tangentFollowDisplacement = tangentFollowDisplacement.scale(minDisp);
 			}
 
-			var distFromObstacle = innerR;
+			var distFromObstacle = innerR + 1;
 
 			var targetPos = COP.add(tangentFollowDisplacement).add(toBoid.scale(distFromObstacle));
 			var targetCOI = BWI.getClosestObstacleInfoOfPoint(targetPos);

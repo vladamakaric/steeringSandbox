@@ -10,7 +10,7 @@ var BEHAVIOR = (function(interf){
 			if(boid.precedence == undefined)
 				boid.precedence = Math.random();
 
-			if(Math.random()>0.999)
+			if(Math.random()>0.99)
 				boid.precedence = Math.random();
 
 			if(!oldMaxForce)
@@ -45,10 +45,8 @@ var BEHAVIOR = (function(interf){
 			
 			if(collision = BWI.getFirstCollisionInFOV(Math.PI*2))
 			{
-
-
-				if(collision.time>35)
-					return $V([0,0]);
+				// if(collision.time>35)
+				// 	return $V([0,0]);
 
 				boid.properties.maxForce = 0.1;
 
@@ -64,7 +62,7 @@ var BEHAVIOR = (function(interf){
 
 				var cross = vel.cross2D(obVel);
 
-				if(vel.dot(obVel)<0){
+				if(vel.dot(obVel)<0 ){
 
 					var probe2 = $LS(pos, pos.add(vel.scale(boid.properties.radius*4)));
 					var probe = $LS(pos, pos.add(vel.getCWPerp2D().scale(boid.properties.radius*4)));
@@ -92,20 +90,38 @@ var BEHAVIOR = (function(interf){
 
 				}else
 				{
-					if(collisionPos.distanceFrom(obPos)<r){
-						force = vel.scale(-10);
-					}else if(pos.distanceFrom(obPos)<r){
 
+					if(!boid.isInFrontOf(collision.boid)){
 
-					}else
-					if(boid.precedence > otherBoid.precedence){
 						force = vel.x(-1);
+						var dist = boid.distanceTo(collision.boid);
 
-						// DRAW.c.fillStyle = 'green';
-						//
-						// DRAW.point(DRAW.c, pos.add(vel.scale(20)) );
+						if(dist>20){
+							force = vel.getCWPerp2D().scale(boid.properties.maxForce*20/dist);
+
+							if(boid.precedence > 0.5)
+								force = force.x(-1);
+						}
+
+
+
+
+						// DRAW.c.fillStyle = 'red';
+						// DRAW.point(DRAW.c, avgPos);
 					}
-						// force = vel.getCWPerp2D();
+
+					// var avgVelDir = vel.add(obVel).x(0.5);
+					// var avgPos = pos.add(obPos).x(0.5);
+					// var avpToPos = pos.subtract(avgPos);
+					//
+					// if(avgVelDir.dot(avpToPos)<0){
+					// 	var toOther = obPos.subtract(pos);
+					//
+					//
+					//
+					//
+					//
+					// }
 				}
 
 				return force;

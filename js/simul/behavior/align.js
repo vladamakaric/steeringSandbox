@@ -10,17 +10,19 @@ var BEHAVIOR = (function(interf){
 			var vel = boid.state.velocity;
 			var averageVel = $V([0,0]);
 
-			if(!BWI.visibleNeighbors.length)
+			var neighbors = BWI.getNeighborsInFOV(Math.PI);
+
+			if(!neighbors.length)
 				return $V([0,0]);
 
-			BWI.visibleNeighbors.forEach(function(nb){
+			neighbors.forEach(function(nb){
 				averageVel = averageVel.add(nb.state.velocity);
 			});
 
 			// if(averageVel.length()<0.6)
 			// 	return $V([0,0]);
 
-			averageVel = averageVel.x(1/BWI.visibleNeighbors.length);
+			averageVel = averageVel.x(1/neighbors.length);
 			return STEERING.velocityMatch(boid, averageVel);
 		}
 

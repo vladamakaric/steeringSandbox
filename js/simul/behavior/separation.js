@@ -11,16 +11,35 @@ var BEHAVIOR = (function(interf){
 			var orient = boid.state.orientation;
 			var repulsiveForce = $V([0,0]);
 
-			if(!BWI.visibleNeighbors.length)
+			var neighbors = BWI.getNeighborsInFOV(Math.PI*2);
+
+			if(!neighbors.length)
 				return $V([0,0]);
 
-			BWI.visibleNeighbors.forEach(function(nb){
+
+
+
+
+			neighbors.forEach(function(nb){
 				var toBoid = pos.subtract(nb.state.position);
-				repulsiveForce = repulsiveForce.add(toBoid.x(1/toBoid.lengthSq()));
+
+				var dist = boid.distanceTo(nb);
+				var distTol = (vel.length() + nb.state.velocity.length())/(2*boid.properties.maxSpeed);
+
+				var distTol = Math.pow(distTol, 3);
+				var cuttOff = distTol*20;
+
+				console.log("disT " + distTol);
+				
+				if(cuttOff < 1)
+					return;
+
+				if(dist<cuttOff)
+					repulsiveForce = repulsiveForce.add(toBoid.x(1/dist));
 			});
 
-			if(vel.lengthSq()<0.11 || vel.dot(repulsiveForce) > 0)
-				return $V([0,0]);
+			// if(vel.lengthSq()<0.11 || vel.dot(repulsiveForce) > 0)
+			// 	return $V([0,0]);
 
 			return repulsiveForce;
 		}

@@ -10,6 +10,21 @@ var SIMUL = (function (interf) {
 			tacticStack.push(tactic);
 		}
 
+		that.distanceTo = function(boid){
+			return state.position.subtract(boid.state.position).length() - properties.radius - boid.properties.radius;
+		}
+
+		that.isInFrontOf = function(boid){
+			var vel = boid.state.velocity;
+			var pos = boid.state.position;
+
+			var avgVelDir = vel.add(state.velocity).x(0.5);
+			var avgPos = pos.add(state.position).x(0.5);
+			var avpToPos = pos.subtract(avgPos);
+
+			return avgVelDir.dot(avpToPos)<0;
+		}
+
 		that.isObstacleCollisionImminent = function(BWI){
 			var pos = state.position;
 			var vel = state.velocity;
@@ -40,6 +55,9 @@ var SIMUL = (function (interf) {
 				currentTactic = tacticStack.last();
 				nextStep = currentTactic.getNextStep(that, BWI);
 			}
+
+			if(!nextStep.force)
+				return;
 
 			force = nextStep.force.truncate(properties.maxForce);
 

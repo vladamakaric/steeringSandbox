@@ -9,11 +9,12 @@ var TACTIC = (function(interf){
 			{behavior: BEHAVIOR.CollisionAvoidance(15, 70), weight: 0.5},
 		],
 		[
-			 // {behavior: BEHAVIOR.WallAvoid(20,40), weight:40}
-			{behavior: BEHAVIOR.PathFollow(path, 20, 60), weight: 1}
+			{behavior: BEHAVIOR.PathFollow(path, 20, 60), weight: 10},
+		 	 {behavior: BEHAVIOR.Align(), weight:7},
+			{behavior: BEHAVIOR.Separation(), weight: 0.1},
+			 {behavior: BEHAVIOR.WallAvoid(20,80), weight:20}
 		],
 		[ 
-			 {behavior: BEHAVIOR.Wander(15, 70), weight: 0.5}
 		]
 		];
 
@@ -29,8 +30,7 @@ var TACTIC = (function(interf){
 		var pbGroups = TACTIC.PriorityBehaviorGroups(bgrps);
 
 		that.changePath = function(newPath){
-			pbGroups.behaviorGroups[2][0].behavior = BEHAVIOR.PathFollow(newPath, 20, 60);
-
+			pbGroups.behaviorGroups[1][0].behavior = BEHAVIOR.PathFollow(newPath, 20, 60);
 		}
 
 		that.getNextStep = function(boid, BWI){
@@ -39,16 +39,24 @@ var TACTIC = (function(interf){
 				boid.pushTacticOnStack(TACTIC.CollisionBackOff(boid, BWI));
 				return {status: TACTIC.DELEGATE};
 			}
+
 			var collision;
 
 			if(collision = BWI.getFirstCollisionInFOV(Math.PI*2)){
-				if(collision.time < 2){
-					boid.pushTacticOnStack(TACTIC.CollisionBackOff2(boid, collision.boid.state.position, collision.boid));
-					return {status: TACTIC.DELEGATE};
-				}
-			}
-			var force = pbGroups.getForce(boid, BWI);
 
+				if(collision.time < 2 || collision.dist){
+					// if(!boid.isInFrontOf(collision.boid)){
+
+						boid.pushTacticOnStack(TACTIC.CollisionBackOff2(boid, collision.boid.state.position, collision.boid));
+						return {status: TACTIC.DELEGATE};
+					// }
+
+					return {status: TACTIC.IN_PROGRESS};
+				}
+
+			}
+
+			var force = pbGroups.getForce(boid, BWI);
 			return {status: TACTIC.IN_PROGRESS, force: force};
 		}
 

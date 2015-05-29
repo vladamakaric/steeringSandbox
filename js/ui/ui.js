@@ -79,7 +79,7 @@ var UI = (function (interf) {
 					boidPath = newPath;
 					simulation.boids.forEach(function(bd){
 						bd.tacticStack[0].changePath(newPath);
-						bd.state.velocity = V.subtract(bd.state.position).truncate(bd.properties.maxSpeed);
+						// bd.state.velocity = V.subtract(bd.state.position).truncate(bd.properties.maxSpeed);
 					});
 				}
 			}

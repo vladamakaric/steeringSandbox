@@ -31,12 +31,21 @@ var SIMUL = (function (interf) {
 
 
 
+		//neradi dobro kada vec postoji sudar, tada treba da vrati najblizi po razdaljini a ne po vremenu
 		that.getFirstCollisionInFOV = function(angle){
 
 			var candidates = that.getNeighborsInFOV(angle);
 
 
 			var collisions = candidates.reduce(function(memo, nb) {
+
+				var bdist = boid.distanceTo(nb);
+				
+				if(bdist<0){
+					memo.push({ penetration: bdist, boid: nb});
+					return memo;
+				}
+
 				var time = getBoidsTimeOfCollision(boid, nb);
 
 				if (time != null && time > 0)
@@ -49,7 +58,7 @@ var SIMUL = (function (interf) {
 			if(collisions.length==0)
 				return null;
 
-			var firstCollision = _.min(collisions, function(col){ return col.time; });
+			var firstCollision = _.min(collisions, function(col){ return col.penetration || col.time; });
 
 			return firstCollision;
 		}
