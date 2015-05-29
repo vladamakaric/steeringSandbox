@@ -13,6 +13,10 @@ var SIMUL = (function (interf) {
 			});
 		}
 
+		that.removeBoid = function(boid){
+			that.boids.splice(that.boids.indexOf(boid), 1);
+		}
+
 		return that;
 	}
 

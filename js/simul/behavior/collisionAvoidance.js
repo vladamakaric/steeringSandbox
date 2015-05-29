@@ -45,8 +45,8 @@ var BEHAVIOR = (function(interf){
 			
 			if(collision = BWI.getFirstCollisionInFOV(Math.PI*2))
 			{
-				// if(collision.time>35)
-				// 	return $V([0,0]);
+				 if(collision.time>35)
+					return $V([0,0]);
 
 				boid.properties.maxForce = 0.1;
 
@@ -56,7 +56,7 @@ var BEHAVIOR = (function(interf){
 				var collisionPos = pos.add(vel.x(collision.time));
 				var fromCP = pos.subtract(collisionPos);
 
-				DRAW.circleOutline(DRAW.c, collisionPos, 10);
+				// DRAW.circleOutline(DRAW.c, collisionPos, 10);
 
 				var force= $V([0,0]);
 
@@ -96,15 +96,12 @@ var BEHAVIOR = (function(interf){
 						force = vel.x(-1);
 						var dist = boid.distanceTo(collision.boid);
 
-						if(dist>20){
-							force = vel.getCWPerp2D().scale(boid.properties.maxForce*20/dist);
+						if(dist>10){
+							force = vel.getCWPerp2D().scale(boid.properties.maxForce*10/dist);
 
 							if(boid.precedence > 0.5)
 								force = force.x(-1);
 						}
-
-
-
 
 						// DRAW.c.fillStyle = 'red';
 						// DRAW.point(DRAW.c, avgPos);

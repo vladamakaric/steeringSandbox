@@ -122,7 +122,6 @@ var MAP = (function(interf){
 				}
 			}
 
-			console.log(nodes);
 			return nodes;
 		}
 

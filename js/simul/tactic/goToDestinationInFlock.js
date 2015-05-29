@@ -6,15 +6,15 @@ var TACTIC = (function(interf){
 		var that = {};
 		var bgrps = [
 		[
-			{behavior: BEHAVIOR.CollisionAvoidance(15, 70), weight: 0.5},
-		],
-		[
-			{behavior: BEHAVIOR.PathFollow(path, 20, 60), weight: 10},
-		 	 {behavior: BEHAVIOR.Align(), weight:7},
-			{behavior: BEHAVIOR.Separation(), weight: 0.1},
 			 {behavior: BEHAVIOR.WallAvoid(20,80), weight:20}
 		],
+		[
+			{behavior: BEHAVIOR.CollisionAvoidance(15, 70), weight: 0.5}
+		],
 		[ 
+			{behavior: BEHAVIOR.PathFollow(path, 20, 60), weight: 10},
+			{behavior: BEHAVIOR.Separation(), weight: 0.1},
+		 	 {behavior: BEHAVIOR.Align(), weight:5}
 		]
 		];
 
@@ -30,7 +30,7 @@ var TACTIC = (function(interf){
 		var pbGroups = TACTIC.PriorityBehaviorGroups(bgrps);
 
 		that.changePath = function(newPath){
-			pbGroups.behaviorGroups[1][0].behavior = BEHAVIOR.PathFollow(newPath, 20, 60);
+			pbGroups.behaviorGroups[2][0].behavior = BEHAVIOR.PathFollow(newPath, 20, 60);
 		}
 
 		that.getNextStep = function(boid, BWI){
@@ -44,14 +44,9 @@ var TACTIC = (function(interf){
 
 			if(collision = BWI.getFirstCollisionInFOV(Math.PI*2)){
 
-				if(collision.time < 2 || collision.dist){
-					// if(!boid.isInFrontOf(collision.boid)){
-
-						boid.pushTacticOnStack(TACTIC.CollisionBackOff2(boid, collision.boid.state.position, collision.boid));
-						return {status: TACTIC.DELEGATE};
-					// }
-
-					return {status: TACTIC.IN_PROGRESS};
+				if(collision.time < 3 || collision.dist){
+					boid.pushTacticOnStack(TACTIC.CollisionBackOff2(boid, collision.boid.state.position, collision.boid));
+					return {status: TACTIC.DELEGATE};
 				}
 
 			}

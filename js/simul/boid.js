@@ -70,6 +70,8 @@ var SIMUL = (function (interf) {
 			if(state.velocity.lengthSq()>0.05)
 			{
 				state.position = pos.add(vel.x(dt));
+
+			if(state.velocity.lengthSq()>0.3)
 				state.orientation = Math.atan2(state.velocity.e(2), 
 											   state.velocity.e(1));
 			}

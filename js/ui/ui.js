@@ -6,30 +6,23 @@ var UI = (function (interf) {
 
 		var currentMap;
 		var action = "add";
-        //
-		// var velAx = params.velA.x;
-		// var velAy = params.velA.y;
-		// var velBx = params.velB.x;
-		// var velBy = params.velB.y;
-		// var posAx = params.posA.x;
-		// var posAy = params.posA.y;
-		// var posBx = params.posB.x;
-		// var posBy = params.posB.y;
-		// var ra = params.ra;
-		// var rb = params.rb;
-
-		var t0 = VECTOR_UTIL.getTimeUntilConstantVelocityMovingBallsCollision({ velA: {x: 5, y: 0}, velB: { x: -4, y: 0}, posA: {x:0, y:0}, posB: {x:100, y: 0}, ra: 40, rb: 10});
 
 		$('select').on('change', function() {
 			mapChanged(this.value);
 		});	
+
+		$('#clear').on('click', function() {  
+			while (simulation.boids.length) { simulation.boids.pop(); }
+		});
+
+		$("input[value="+ action +  "]").prop("checked", true);
 
 		$("input[name='oncl']").change(clickBehaviorChanged);
 		that.update = function(){};
 
 	
 		var boidPath = null;
-		var endPoint = $V([700,500]);
+		var endPoint = $V([400,500]);
 		var clss = null;
 		var lss = null;
 		var simulation = null;	
@@ -63,23 +56,29 @@ var UI = (function (interf) {
 
 		canvasPointerEvents.ptrDown = function(pos){
 			var V = $V([pos.x,pos.y]);
-			var boid =simulation.boids[0];
-			
+
+			if(action == "delete" && simulation.boids.length){
+
+				var minbd = _.min(simulation.boids, function(bd) { return bd.state.position.distanceSqFrom(V);});
+
+				if(minbd.state.position.distanceFrom(V)<20)
+					simulation.removeBoid(minbd);
+			}
+			$V([30,30])
 			if(action == "add"){
 				var newBoid = createBoid(V);
 				simulation.boids.push(newBoid);
-
 				return;
 			}
 			
-			if(action == "path"){
+			if(action == "path" && simulation.boids.length){
+				var boid =simulation.boids[0];
 				var newPath = currentMap.getShortestPath(V, boid.state.position );
 
 				if(newPath){
 					boidPath = newPath;
 					simulation.boids.forEach(function(bd){
 						bd.tacticStack[0].changePath(newPath);
-						// bd.state.velocity = V.subtract(bd.state.position).truncate(bd.properties.maxSpeed);
 					});
 				}
 			}
@@ -96,8 +95,8 @@ var UI = (function (interf) {
 			c.strokeStyle = '#ff0000';
 			DRAW.lineSegments(c,lss);
 
-			c.strokeStyle = '#fff000';
-			DRAW.lineSegments(c,clss);
+			// c.strokeStyle = '#fff000';
+			// DRAW.lineSegments(c,clss);
 
 			c.lineWidth = 1;
 			c.strokeStyle = '#000000';
@@ -138,7 +137,11 @@ var UI = (function (interf) {
 			// 	createBoid($V([50,400]))
 			// 	];
 			addMapBoundaries();
+
 			simulation = SIMUL.Simulation([], lss);
+
+			var newBoid = createBoid($V([30,30]));
+			simulation.boids.push(newBoid);
 		}
 
 

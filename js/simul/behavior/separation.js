@@ -29,7 +29,6 @@ var BEHAVIOR = (function(interf){
 				var distTol = Math.pow(distTol, 3);
 				var cuttOff = distTol*20;
 
-				console.log("disT " + distTol);
 				
 				if(cuttOff < 1)
 					return;

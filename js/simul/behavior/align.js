@@ -15,15 +15,17 @@ var BEHAVIOR = (function(interf){
 			if(!neighbors.length)
 				return $V([0,0]);
 
+			var velSum = 0;
 			neighbors.forEach(function(nb){
 				averageVel = averageVel.add(nb.state.velocity);
+				velSum += nb.state.velocity.length();
 			});
 
-			// if(averageVel.length()<0.6)
-			// 	return $V([0,0]);
+			var koef = velSum/(boid.properties.maxSpeed*neighbors.length);
 
 			averageVel = averageVel.x(1/neighbors.length);
-			return STEERING.velocityMatch(boid, averageVel);
+
+			return STEERING.velocityMatch(boid, averageVel).x(koef);
 		}
 
 		return that;
