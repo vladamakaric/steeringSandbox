@@ -140,8 +140,13 @@ var UI = (function (interf) {
 
 			simulation = SIMUL.Simulation([], lss);
 
-			var newBoid = createBoid($V([30,30]));
-			simulation.boids.push(newBoid);
+			simulation.boids.push(createBoid($V([30,30])));
+			simulation.boids.push(createBoid($V([10,50])));
+			simulation.boids.push(createBoid($V([80,90])));
+			simulation.boids.push(createBoid($V([60,70])));
+			simulation.boids.push(createBoid($V([50,100])));
+			simulation.boids.push(createBoid($V([60,130])));
+			simulation.boids.push(createBoid($V([20,130])));
 		}
 
 
